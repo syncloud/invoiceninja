@@ -8,8 +8,8 @@ local platform = '25.02';
 local selenium = '4.21.0-20240517';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
 local python = '3.9-slim-buster';
-local distro_default = "buster";
-local distros = ["bookworm", "buster"];
+local distro_default = 'buster';
+local distros = ['bookworm', 'buster'];
 
 local build(arch, test_ui, dind) = [{
   kind: 'pipeline',
@@ -69,24 +69,30 @@ local build(arch, test_ui, dind) = [{
                './mariadb/test.sh',
              ],
            },
-    {
-            name: "build php",
-            image: "docker:" + dind,
-            commands: [
-                "./php/build.sh"
-            ],
-            volumes: [
-                {
-                    name: "dockersock",
-                    path: "/var/run"
-                }
-            ]
-        },
+           {
+             name: 'build php',
+             image: 'docker:' + dind,
+             commands: [
+               './php/build.sh',
+             ],
+             volumes: [
+               {
+                 name: 'dockersock',
+                 path: '/var/run',
+               },
+             ],
+           },
            {
              name: 'invoice ninja',
-             image: 'invoiceninja/invoiceninja:'+version,
+             image: 'docker:' + dind,
              commands: [
-               './invoiceninja/build.sh',
+               './invoiceninja/build.sh ' + version,
+             ],
+             volumes: [
+               {
+                 name: 'dockersock',
+                 path: '/var/run',
+               },
              ],
            },
            {
@@ -117,72 +123,75 @@ local build(arch, test_ui, dind) = [{
                'VERSION=$(cat version)',
                './package.sh ' + name + ' $VERSION ',
              ],
-           }] + [
-        {
-            name: "test " + distro,
-            image: "python:" + python,
-            commands: [
-              "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
-              "cd test",
-              "./deps.sh",
-              "py.test -x -s test.py --distro=" + distro + " --domain=" + distro + ".com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + "." + distro + ".com --app=" + name + " --arch=" + arch
-            ]
-        } for distro in distros 
-        ] + (if test_ui then ([
-                             {
-                               name: 'selenium',
-                               image: 'selenium/standalone-' + browser + ':' + selenium,
-                               detach: true,
-                               environment: {
-                                 SE_NODE_SESSION_TIMEOUT: '999999',
-                                 START_XVFB: 'true',
-                               },
-                               volumes: [{
-                                 name: 'shm',
-                                 path: '/dev/shm',
-                               }],
-                               commands: [
-                                 'cat /etc/hosts',
-                                 'getent hosts ' + name + ".buster.com | sed 's/" + name + ".buster.com/auth.buster.com/g' | sudo tee -a /etc/hosts",
-                                 'cat /etc/hosts',
-                                 '/opt/bin/entry_point.sh',
-                               ],
-                             },
+           },
+         ] + [
+           {
+             name: 'test ' + distro,
+             image: 'python:' + python,
+             commands: [
+               'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
+               'cd test',
+               './deps.sh',
+               'py.test -x -s test.py --distro=' + distro + ' --domain=' + distro + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro + '.com --app=' + name + ' --arch=' + arch,
+             ],
+           }
+           for distro in distros
+         ] + (if test_ui then ([
+                                 {
+                                   name: 'selenium',
+                                   image: 'selenium/standalone-' + browser + ':' + selenium,
+                                   detach: true,
+                                   environment: {
+                                     SE_NODE_SESSION_TIMEOUT: '999999',
+                                     START_XVFB: 'true',
+                                   },
+                                   volumes: [{
+                                     name: 'shm',
+                                     path: '/dev/shm',
+                                   }],
+                                   commands: [
+                                     'cat /etc/hosts',
+                                     'DOMAIN="' + name + '.' + distro_default + '.com"',
+                                     'getent hosts $DOMAIN | sed "s/$DOMAIN/auth.$DOMAIN.redirect/g" | sudo tee -a /etc/hosts',
+                                     'cat /etc/hosts',
+                                     '/opt/bin/entry_point.sh',
+                                   ],
+                                 },
 
-                             {
-                               name: 'selenium-video',
-                               image: 'selenium/video:ffmpeg-6.1.1-20240621',
-                               detach: true,
-                               environment: {
-                                 DISPLAY_CONTAINER_NAME: 'selenium',
-                                 FILE_NAME: 'video.mkv',
-                               },
-                               volumes: [
                                  {
-                                   name: 'shm',
-                                   path: '/dev/shm',
+                                   name: 'selenium-video',
+                                   image: 'selenium/video:ffmpeg-6.1.1-20240621',
+                                   detach: true,
+                                   environment: {
+                                     DISPLAY_CONTAINER_NAME: 'selenium',
+                                     FILE_NAME: 'video.mkv',
+                                   },
+                                   volumes: [
+                                     {
+                                       name: 'shm',
+                                       path: '/dev/shm',
+                                     },
+                                     {
+                                       name: 'videos',
+                                       path: '/videos',
+                                     },
+                                   ],
                                  },
                                  {
-                                   name: 'videos',
-                                   path: '/videos',
+                                   name: 'test-ui',
+                                   image: 'python:' + python,
+                                   commands: [
+                                     'cd test',
+                                     './deps.sh',
+                                     'py.test -x -s ui.py --distro=buster --ui-mode=desktop --domain=' + distro_default + '.com --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --browser-height=2000 --browser=' + browser,
+                                   ],
+                                   volumes: [{
+                                     name: 'videos',
+                                     path: '/videos',
+                                   }],
                                  },
-                               ],
-                             },
-                             {
-                               name: 'test-ui',
-                               image: 'python:' + python,
-                               commands: [
-                                 'cd test',
-                                 './deps.sh',
-                                 'py.test -x -s ui.py --distro=buster --ui-mode=desktop --domain=buster.com --device-host=' + name + '.buster.com --app=' + name + ' --browser-height=2000 --browser=' + browser,
-                               ],
-                               volumes: [{
-                                 name: 'videos',
-                                 path: '/videos',
-                               }],
-                             },
-                           ])
-          else []) +
+                               ])
+              else []) +
          (if arch == 'amd64' then [
             {
               name: 'test-upgrade',
@@ -291,23 +300,25 @@ local build(arch, test_ui, dind) = [{
           path: '/var/run',
         },
       ],
-    }] + [
+    },
+  ] + [
+    {
+      name: name + '.' + distro + '.com',
+      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
+      privileged: true,
+      volumes: [
         {
-            name: name + "."+distro+".com",
-            image: "syncloud/platform-"+distro+"-" + arch + ":" + platform,
-            privileged: true,
-            volumes: [
-                {
-                    name: "dbus",
-                    path: "/var/run/dbus"
-                },
-                {
-                    name: "dev",
-                    path: "/dev"
-                }
-            ]
-        } for distro in distros
-    ],
+          name: 'dbus',
+          path: '/var/run/dbus',
+        },
+        {
+          name: 'dev',
+          path: '/dev',
+        },
+      ],
+    }
+    for distro in distros
+  ],
   volumes: [
     {
       name: 'dbus',
