@@ -1,8 +1,8 @@
 apps:
 
-  home-server:
+  server:
     user: invoiceninja
-    command: bin/service.home-server.sh
+    command: bin/service.php-fpm.sh
     daemon: simple
     plugs:
     - network
