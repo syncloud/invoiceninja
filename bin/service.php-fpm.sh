@@ -2,4 +2,4 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )
 
-$DIR/invoiceninja/bin/php-fpm.sh -y ${SNAP_DATA}/config/php-fpm.conf -c ${SNAP_DATA}/config/php.ininvoiceninja/bin/php-fpm.sh -y ${SNAP_DATA}/config/php-fpm.conf -c ${SNAP_DATA}/config/php.ini
+$DIR/invoiceninja/bin/php-fpm.sh -y ${SNAP}/invoiceninja/usr/local/etc/php-fpm.conf -c ${SNAP}/invoiceninja/usr/local/etc/php.ini

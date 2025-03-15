@@ -19,7 +19,17 @@ cp -r usr ${BUILD_DIR}
 cp -r bin ${BUILD_DIR}
 cp -r lib ${BUILD_DIR}
 EXT=$(echo usr/local/lib/php/extensions/no-debug*)
-echo "extension_dir=/snap/invoiceninja/current/invoiceninja/$EXT"
+SNAP=/snap/invoiceninja/current
+SNAP_DATA=/var/$SNAP
+RUNTIME_DIR=$SNAP/invoiceninja
+echo "extension_dir=$RUNTIME_DIR/$EXT" >> ${BUILD_DIR}/usr/local/etc/php/php.ini
+
+sed -i "s#include=.*#include=$RUNTIME_DIR/usr/local/etc/php-fpm.d/*.conf#g" ${BUILD_DIR}/usr/local/etc/php-fpm.conf
+grep include ${BUILD_DIR}/usr/local/etc/php-fpm.conf
+
+sed -i "s#;pid =.*#pid = $SNAP_DATA/php-fpm.pid#g" ${BUILD_DIR}/usr/local/etc/php-fpm.conf
+grep pid ${BUILD_DIR}/usr/local/etc/php-fpm.conf
+
 cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 
