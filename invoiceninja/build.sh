@@ -10,7 +10,7 @@ while ! docker create --name=app invoiceninja/invoiceninja:$VERSION ; do
   echo "retry docker"
 done
 mkdir -p ${BUILD_DIR}
-cd ${DIR}/build
+cd ${DIR}/../build
 docker export app -o app.tar
 tar xf app.tar
 
