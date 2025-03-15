@@ -37,7 +37,7 @@ echo "extension_dir=$RUNTIME_DIR/$EXT" >> ${BUILD_DIR}/usr/local/etc/php/php.ini
 rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/docker.conf
 rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-docker.conf
 
-cp $DIR/../config/zz-php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/
+cp $DIR/../config/php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-php-fpm.conf
 cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 
