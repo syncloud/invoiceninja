@@ -70,19 +70,6 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
-             name: 'build php',
-             image: 'docker:' + dind,
-             commands: [
-               './php/build.sh',
-             ],
-             volumes: [
-               {
-                 name: 'dockersock',
-                 path: '/var/run',
-               },
-             ],
-           },
-           {
              name: 'invoice ninja',
              image: 'docker:' + dind,
              commands: [
