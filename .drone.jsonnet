@@ -86,7 +86,7 @@ local build(arch, test_ui, dind) = [{
              name: 'invoice ninja test',
              image: 'syncloud/platform-buster-' + arch + ':' + platform,
              commands: [
-               './server/test.sh',
+               './invoiceninja/test.sh',
              ],
            },
            {
