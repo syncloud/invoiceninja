@@ -18,6 +18,8 @@ cp -r opt ${BUILD_DIR}
 cp -r usr ${BUILD_DIR}
 cp -r bin ${BUILD_DIR}
 cp -r lib ${BUILD_DIR}
+EXT=$(echo usr/local/lib/php/extensions/no-debug*)
+echo "extension_dir=/snap/invoiceninja/current/invoiceninja/$EXT"
 cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 
