@@ -4,13 +4,13 @@ cd ${DIR}
 
 VERSION=$1
 
-cd ${DIR}/build
 BUILD_DIR=${DIR}/../build/snap/invoiceninja
 while ! docker create --name=app invoiceninja/invoiceninja:$VERSION ; do
   sleep 1
   echo "retry docker"
 done
 mkdir -p ${BUILD_DIR}
+cd ${DIR}/build
 docker export app -o app.tar
 tar xf app.tar
 
