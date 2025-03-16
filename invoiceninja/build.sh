@@ -14,10 +14,11 @@ cd ${DIR}/../build
 docker export app -o app.tar
 tar xf app.tar
 
-cp -r opt ${BUILD_DIR}
 cp -r usr ${BUILD_DIR}
 cp -r bin ${BUILD_DIR}
 cp -r lib ${BUILD_DIR}
+mkdir ${BUILD_DIR}/var
+cp -r var/www ${BUILD_DIR}/var
 
 EXT=$(echo usr/local/lib/php/extensions/no-debug*)
 SNAP=/snap/invoiceninja/current
