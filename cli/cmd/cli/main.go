@@ -65,17 +65,6 @@ func main() {
 		},
 	})
 
-	cmd.AddCommand(&cobra.Command{
-		Use:  "activate-premium [email]",
-		Args: cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			logger := log.Logger(zap.InfoLevel)
-			logger.Info("activate-premium", zap.String("email", args[0]))
-			install := installer.New(logger)
-			return install.ActivatePremium(args[0])
-		},
-	})
-
 	err := cmd.Execute()
 	if err != nil {
 		fmt.Print(err)

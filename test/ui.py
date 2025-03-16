@@ -52,10 +52,6 @@ def test_logout(selenium):
     selenium.screenshot('sign-out-after')
 
 
-def test_activate_premium(device):
-    device.run_ssh('snap run invoiceninja.cli activate-premium "invoiceninja@example.com" &> {0}/activate-premium.log'.format(TMP_DIR))
-
-
 def test_login(selenium):
     selenium.click_by(By.XPATH, "//button[text()='Sign in']")
 
