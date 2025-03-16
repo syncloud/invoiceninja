@@ -35,6 +35,9 @@ grep include ${BUILD_DIR}/usr/local/etc/php-fpm.conf
 #sed -i "s#;error_log =.*#error_log = syslog#g" ${BUILD_DIR}/usr/local/etc/php-fpm.conf
 #grep error_log ${BUILD_DIR}/usr/local/etc/php-fpm.conf
 
+sed -i "s/'driver' => '.*'/'driver' => 'syslog'/g" ${BUILD_DIR}/var/www/app/config/logging.php
+grep driver ${BUILD_DIR}/var/www/app/config/logging.php
+
 rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/docker.conf
 rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-docker.conf
 
