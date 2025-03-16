@@ -278,8 +278,8 @@ func (i *Installer) getOrCreateAppKey() (string, error) {
 	_, err := os.Stat(file)
 	if os.IsNotExist(err) {
 		secret, err := i.executor.Run(
-			fmt.Sprint(i.appDir, "/bin/php.sh"),
-			fmt.Sprint(i.appDir, "/invoiceninja/var/www/app/artisan"),
+			path.Join(i.appDir, App, "/bin/php.sh"),
+			path.Join(i.appDir, App, "/var/www/app/artisan"),
 			"key:generate",
 			"--show",
 		)
