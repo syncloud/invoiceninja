@@ -44,6 +44,9 @@ grep REDIS_PATH ${BUILD_DIR}/var/www/app/config/database.php
 sed -i "s#'port'.*REDIS_PORT.*#'scheme'=>'unix',#g" ${BUILD_DIR}/var/www/app/config/database.php
 grep scheme ${BUILD_DIR}/var/www/app/config/database.php
 
+sed -i "s#'root' => public_path('storage').*#'root' => '$SNAP_DATA/storage',#g" ${BUILD_DIR}/var/www/app/config/filesystems.php
+grep root ${BUILD_DIR}/var/www/app/config/filesystems.php
+
 ln -s $SNAP_DATA/config/.env ${BUILD_DIR}/var/www/app/.env
 
 rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/docker.conf
