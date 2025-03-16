@@ -75,15 +75,17 @@ func (d *Database) Init() error {
 }
 
 func (d *Database) Execute(sql string) error {
-	return d.executor.Run(fmt.Sprintf("%s/bin/sql.sh", d.appDir), "--execute", sql)
+	_, err := d.executor.Run(fmt.Sprintf("%s/bin/sql.sh", d.appDir), "--execute", sql)
+	return err
 }
 
 func (d *Database) ExecuteDb(db string, sql string) error {
-	return d.executor.Run(
+	_, err := d.executor.Run(
 		fmt.Sprintf("%s/bin/sql.sh", d.appDir),
 		"--database", db,
 		"--execute", sql,
 	)
+	return err
 }
 
 func (d *Database) Restore() error {
@@ -91,7 +93,7 @@ func (d *Database) Restore() error {
 }
 
 func (d *Database) Backup() error {
-	return d.executor.Run(
+	_, err := d.executor.Run(
 		fmt.Sprintf("%s/mariadb/usr/bin/mariadb-dump", d.appDir),
 		App,
 		fmt.Sprintf("--socket=%s/mysql.sock", d.dataDir),
@@ -99,6 +101,7 @@ func (d *Database) Backup() error {
 		"--quick",
 		fmt.Sprintf("--result-file=%s", d.backupFile),
 	)
+	return err
 }
 
 func (d *Database) createDb() error {

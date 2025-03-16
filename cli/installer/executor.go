@@ -16,7 +16,7 @@ func NewExecutor(logger *zap.Logger) *Executor {
 	}
 }
 
-func (e *Executor) Run(app string, args ...string) error {
+func (e *Executor) Run(app string, args ...string) (string, error) {
 	cmd := exec.Command(app, args...)
 	e.logger.Debug("executing", zap.String("cmd", cmd.String()))
 	out, err := cmd.CombinedOutput()
@@ -24,5 +24,5 @@ func (e *Executor) Run(app string, args ...string) error {
 	for _, line := range strings.Split(string(out), "\n") {
 		e.logger.Debug(line)
 	}
-	return err
+	return string(out), err
 }
