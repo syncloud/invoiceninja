@@ -9,3 +9,4 @@ sed -i "s#$RUNTIME_DIR#$BUILD_DIR#g" ${BUILD_DIR}/usr/local/etc/php/php.ini
 ${BUILD_DIR}/bin/php-fpm.sh --version
 ${BUILD_DIR}/bin/php-fpm.sh --version | ( ! grep Warning )
 ${BUILD_DIR}/bin/php.sh --version
+${BUILD_DIR}/bin/php.sh artisan key:generate --show
