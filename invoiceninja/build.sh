@@ -38,11 +38,11 @@ grep include ${BUILD_DIR}/usr/local/etc/php-fpm.conf
 sed -i "s/'driver' => '.*'/'driver' => 'syslog'/g" ${BUILD_DIR}/var/www/app/config/logging.php
 grep driver ${BUILD_DIR}/var/www/app/config/logging.php
 
-sed -i "s#'host'.*REDIS_HOST.*#'host'=>env('REDIS_PATH'),#g" ${BUILD_DIR}/var/www/app/config/database.php
+sed -i "s#'host'.*REDIS_HOST.*#'path'=>env('REDIS_PATH'),#g" ${BUILD_DIR}/var/www/app/config/database.php
 grep REDIS_PATH ${BUILD_DIR}/var/www/app/config/database.php
 
-sed -i "s#'port'.*REDIS_PORT.*#'schema'=>'unix',#g" ${BUILD_DIR}/var/www/app/config/database.php
-grep schema ${BUILD_DIR}/var/www/app/config/database.php
+sed -i "s#'port'.*REDIS_PORT.*#'scheme'=>'unix',#g" ${BUILD_DIR}/var/www/app/config/database.php
+grep scheme ${BUILD_DIR}/var/www/app/config/database.php
 
 ln -s $SNAP_DATA/config/.env ${BUILD_DIR}/var/www/app/.env
 
