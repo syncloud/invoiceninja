@@ -20,11 +20,7 @@ type Variables struct {
 	AppDir              string
 	DataDir             string
 	CommonDir           string
-	AuthJwtSecret       string
-	JwtSecret           string
-	EncryptionServerKey string
-	PseudoKeyParamsKey  string
-	ValetTokenSecret    string
+	AppKey       string
 	AppUrl              string
 	Domain              string
 }
@@ -211,11 +207,8 @@ func (i *Installer) UpdateVersion() error {
 }
 
 func (i *Installer) UpdateConfigs() error {
-	encryptionServerKey, err := randomHex(32)
-	if err != nil {
-		return err
-	}
-	valetTokenSecret, err := randomHex(32)
+	
+	appKey, err := i.getOrCreateAppKey()
 	if err != nil {
 		return err
 	}
@@ -234,12 +227,8 @@ func (i *Installer) UpdateConfigs() error {
 		AppDir:              i.appDir,
 		DataDir:             i.dataDir,
 		CommonDir:           i.commonDir,
-		AuthJwtSecret:       uuid.New().String(),
-		JwtSecret:           uuid.New().String(),
-		EncryptionServerKey: encryptionServerKey,
-		PseudoKeyParamsKey:  uuid.New().String(),
-		ValetTokenSecret:    valetTokenSecret,
-		AppUrl:              appUrl,
+		AppKey:       appKey,
+			AppUrl:              appUrl,
 		Domain:              domain,
 	}
 
@@ -251,11 +240,6 @@ func (i *Installer) UpdateConfigs() error {
 	if err != nil {
 		return err
 	}
-
-	err = cp.Copy(
-		path.Join(i.appDir, "web", "index.html"),
-		path.Join(i.dataDir, "web", "index.html"),
-	)
 
 	return nil
 }
@@ -276,9 +260,6 @@ func (i *Installer) AccessChange() error {
 	return i.UpdateConfigs()
 }
 
-func (i *Installer) ActivatePremium(email string) error {
-	return i.database.ActivatePremium(email)
-}
 
 func (i *Installer) FixPermissions() error {
 	err := Chown(i.dataDir, App)
@@ -297,6 +278,39 @@ func (i *Installer) createMissingDirs(dirs ...string) error {
 		err := createMissingDir(dir)
 		if err != nil {
 			i.logger.Error("cannot create dir", zap.String("dir", dir), zap.Error(err))
+			return err
+		}
+	}
+	return nil
+}
+
+func createMissingDir(dir string) error {
+	_, err := os.Stat(dir)
+	if os.IsNotExist(err) {
+		err = os.Mkdir(dir, 0755)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (i *Installer) getOrCreateAppKey() (string, error) {
+ file :=  path.Join(i.dataDir, ".app_key")
+	_, err := os.Stat(file)
+	if os.IsNotExist(err) {
+
+		secret := 
+		err = os.WriteFile(file, []byte(secret), 0644)
+		return secret, err
+	}
+	content, err := os.ReadFile(file)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
+}
+e dir", zap.String("dir", dir), zap.Error(err))
 			return err
 		}
 	}
