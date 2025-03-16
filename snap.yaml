@@ -10,6 +10,36 @@ apps:
     start-timeout: 600s
     restart-condition: always
 
+  worker-1:
+    user: invoiceninja
+    command: bin/service.worker.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    start-timeout: 600s
+    restart-condition: always
+
+  worker-2:
+    user: invoiceninja
+    command: bin/service.worker.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    start-timeout: 600s
+    restart-condition: always
+
+  scheduler:
+    user: invoiceninja
+    command: bin/service.scheduler.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    start-timeout: 600s
+    restart-condition: always
+
   mariadb:
     user: invoiceninja
     command: bin/service.mariadb.sh
