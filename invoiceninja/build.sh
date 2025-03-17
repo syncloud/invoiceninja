@@ -49,7 +49,7 @@ grep scheme ${BUILD_DIR}/var/www/app/config/database.php
 #sed -i "s#'root' => public_path('storage').*#'root' => '$SNAP_DATA/storage',#g" ${BUILD_DIR}/var/www/app/config/filesystems.php
 grep root ${BUILD_DIR}/var/www/app/config/filesystems.php
 
-sed -i "s#return \$app;#\$app->useStoragePath( '$SNAP_DATA/storage' ); return \$app;#g" ${BUILD_DIR}/var/www/app/bootstrap/app.php
+#sed -i "s#return \$app;#\$app->useStoragePath( '$SNAP_DATA/storage' ); return \$app;#g" ${BUILD_DIR}/var/www/app/bootstrap/app.php
 grep return ${BUILD_DIR}/var/www/app/bootstrap/app.php
 
 ln -s $SNAP_DATA/config/.env ${BUILD_DIR}/var/www/app/.env
