@@ -180,21 +180,6 @@ func (i *Installer) StorageChange() error {
 		return err
 	}
 
-	err = linux.CreateMissingDirs(
-		path.Join(i.dataDir, "nginx"),
-		path.Join(i.dataDir, "storage/framework/sessions"),
-		path.Join(i.dataDir, "storage/framework/views"),
-		path.Join(i.dataDir, "storage/framework/cache"),
-	)
-	if err != nil {
-		return err
-	}
-
-	err = Chown(i.dataDir, App)
-	if err != nil {
-		return err
-	}
-
 	err = Chown(storageDir, App)
 	if err != nil {
 		return err
@@ -211,6 +196,20 @@ func (i *Installer) UpdateVersion() error {
 }
 
 func (i *Installer) UpdateConfigs() error {
+	err := linux.CreateMissingDirs(
+		path.Join(i.dataDir, "nginx"),
+		path.Join(i.dataDir, "storage/framework/sessions"),
+		path.Join(i.dataDir, "storage/framework/views"),
+		path.Join(i.dataDir, "storage/framework/cache"),
+	)
+	if err != nil {
+		return err
+	}
+
+	err = Chown(i.dataDir, App)
+	if err != nil {
+		return err
+	}
 
 	appKey, err := i.getOrCreateAppKey()
 	if err != nil {
