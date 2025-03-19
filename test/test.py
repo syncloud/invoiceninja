@@ -45,7 +45,7 @@ def module_setup(request, device, data_dir, platform_data_dir, app_dir, artifact
 
 def test_start(module_setup, device, device_host, app, domain):
     add_host_alias(app, device_host, domain)
-    device.run_ssh('date', retries=20)
+    device.run_ssh('date', retries=10)
     device.run_ssh('mkdir {0}'.format(TMP_DIR))
 
 
@@ -56,7 +56,7 @@ def test_activate_device(device):
 
 def test_install(app_archive_path, domain, device_session, device_password):
     local_install(domain, device_password, app_archive_path)
-    wait_for_installer(device_session, domain)
+    wait_for_installer(device_session, domain, attempts=10)
 
 
 def test_index(app_domain):
