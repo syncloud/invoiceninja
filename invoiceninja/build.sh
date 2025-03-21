@@ -60,5 +60,5 @@ rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-docker.conf
 cp $DIR/../config/php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-php-fpm.conf
 cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
-${BUILD_DIR}/bin/composer require socialiteproviders/authelia
+${BUILD_DIR}/bin/composer.sh require socialiteproviders/authelia
 
