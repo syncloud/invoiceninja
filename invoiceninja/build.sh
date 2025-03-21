@@ -5,10 +5,11 @@ cd ${DIR}
 VERSION=$1
 
 BUILD_DIR=${DIR}/../build/snap/invoiceninja
-while ! docker create --name=app invoiceninja/invoiceninja:$VERSION ; do
+while ! docker build --build-arg VERSION=$1 -t app:syncloud . ; do
   sleep 1
   echo "retry docker"
 done
+docker create --name=app app:syncloud
 mkdir -p ${BUILD_DIR}
 cd ${DIR}/../build
 docker export app -o app.tar
