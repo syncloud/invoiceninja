@@ -75,6 +75,11 @@ local build(arch, test_ui, dind) = [{
              commands: [
                './invoiceninja/build.sh ' + version,
              ],
+environment: {
+        GITHUB_TOKEN: {
+          from_secret: 'GITHUB_TOKEN',
+        }
+      },
              volumes: [
                {
                  name: 'dockersock',

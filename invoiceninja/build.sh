@@ -9,7 +9,7 @@ while ! docker ps ; do
   sleep 1
   echo "retry docker"
 done
-docker build --secret id=gh,env=GITHUB_TOKEN --build-arg VERSION=$1 -t app:syncloud .
+docker build --secret id=GITHUB_TOKEN --build-arg VERSION=$1 -t app:syncloud .
 docker create --name=app app:syncloud
 mkdir -p ${BUILD_DIR}
 cd ${DIR}/../build
@@ -63,4 +63,3 @@ cp $DIR/../config/php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-php-fpm.c
 cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 #${BUILD_DIR}/bin/composer.sh require socialiteproviders/authelia
-
