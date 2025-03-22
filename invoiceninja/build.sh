@@ -9,7 +9,7 @@ while ! docker ps ; do
   sleep 1
   echo "retry docker"
 done
-docker build --secret id=GITHUB_TOKEN --build-arg VERSION=$1 -t app:syncloud .
+docker build --build-arg GITHUB_TOKEN=$GITHUB_TOKEN --build-arg VERSION=$1 -t app:syncloud .
 docker create --name=app app:syncloud
 mkdir -p ${BUILD_DIR}
 cd ${DIR}/../build
