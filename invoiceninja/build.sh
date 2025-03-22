@@ -64,4 +64,4 @@ cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 #cd ${BUILD_DIR}/var/www/app
 ${BUILD_DIR}/bin/composer.sh require socialiteproviders/authelia
-cp -r vendor/* ${BUILD_DIR}/var/www/app/vendor/
+cp -r vendor/socialiteproviders/authelia ${BUILD_DIR}/var/www/app/vendor/socialiteproviders/
