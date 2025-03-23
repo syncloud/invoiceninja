@@ -65,3 +65,10 @@ cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 #cd ${BUILD_DIR}/var/www/app
 ${BUILD_DIR}/bin/composer.sh require socialiteproviders/authelia
 cp -r vendor/socialiteproviders/authelia ${BUILD_DIR}/var/www/app/vendor/socialiteproviders/
+
+wget https://github.com/cyberb/invoiceninja/archive/refs/heads/v5-stable.tar.gz
+tar xf v5-stable.tar.gz
+cp invoiceninja-v5-stable/app/Http/Controllers/Auth/LoginController.php ${BUILD_DIR}/var/www/app
+cp invoiceninja-v5-stable/app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app
+cp invoiceninja-v5-stable/app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app
+cp invoiceninja-v5-stable/config/services.php ${BUILD_DIR}/var/www/app

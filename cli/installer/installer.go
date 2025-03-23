@@ -15,13 +15,17 @@ import (
 const App = "invoiceninja"
 
 type Variables struct {
-	App       string
-	AppDir    string
-	DataDir   string
-	CommonDir string
-	AppKey    string
-	AppUrl    string
-	Domain    string
+	App              string
+	AppDir           string
+	DataDir          string
+	CommonDir        string
+	AppKey           string
+	AppUrl           string
+	Domain           string
+	AuthUrl          string
+	AuthClientId     string
+	AuthClientSecret string
+	AuthRedirectUri  string
 }
 
 type Installer struct {
@@ -224,15 +228,28 @@ func (i *Installer) UpdateConfigs() error {
 	if err != nil {
 		return err
 	}
+	authUrl, err := i.platformClient.GetAppUrl("auth")
+	if err != nil {
+		return err
+	}
+	redirectUri := "/auth/authelia/callback"
+	password, err := i.platformClient.RegisterOIDCClient(App, redirectUri, false, "client_secret_basic")
+	if err != nil {
+		return err
+	}
 
 	variables := Variables{
-		App:       App,
-		AppDir:    i.appDir,
-		DataDir:   i.dataDir,
-		CommonDir: i.commonDir,
-		AppKey:    appKey,
-		AppUrl:    appUrl,
-		Domain:    domain,
+		App:              App,
+		AppDir:           i.appDir,
+		DataDir:          i.dataDir,
+		CommonDir:        i.commonDir,
+		AppKey:           appKey,
+		AppUrl:           appUrl,
+		Domain:           domain,
+		AuthUrl:          authUrl,
+		AuthClientId:     App,
+		AuthClientSecret: password,
+		AuthRedirectUri:  redirectUri,
 	}
 
 	err = config.Generate(
