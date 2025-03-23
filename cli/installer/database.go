@@ -75,7 +75,7 @@ func (d *Database) Init() error {
 }
 
 func (d *Database) Execute(sql string) error {
-	_, err := d.executor.Run(fmt.Sprintf("%s/bin/sql.sh", d.appDir), "--execute", sql)
+	_, err := d.executor.Run(fmt.Sprintf("%s/bin/mysql", d.appDir), "--execute", sql)
 	return err
 }
 
