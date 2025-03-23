@@ -21,4 +21,3 @@ ${BUILD_DIR}/bin/php.sh --version
 ${BUILD_DIR}/bin/php.sh -i
 ${BUILD_DIR}/bin/php.sh -i | grep -i "gd support" | grep -i enabled
 ${BUILD_DIR}/bin/artisan.sh key:generate --show
-rtisan key:generate --show
