@@ -38,6 +38,7 @@ type Installer struct {
 	appDir             string
 	dataDir            string
 	commonDir          string
+	artisanPath        string
 	executor           *Executor
 	logger             *zap.Logger
 }
@@ -48,6 +49,7 @@ func New(logger *zap.Logger) *Installer {
 	commonDir := fmt.Sprintf("/var/snap/%s/common", App)
 	configDir := path.Join(dataDir, "config")
 	executor := NewExecutor(logger)
+	artisanPath := path.Join(appDir, App, "/bin/artisan.sh")
 	return &Installer{
 		newVersionFile:     path.Join(appDir, "version"),
 		currentVersionFile: path.Join(dataDir, "version"),
@@ -59,6 +61,7 @@ func New(logger *zap.Logger) *Installer {
 		dataDir:            dataDir,
 		commonDir:          commonDir,
 		executor:           executor,
+		artisanPath:        artisanPath,
 		logger:             logger,
 	}
 }
@@ -104,11 +107,7 @@ func (i *Installer) Configure() error {
 		}
 	}
 
-	_, err := i.executor.Run(
-		path.Join(i.appDir, "invoiceninja/bin/artisan.sh"),
-		"migrate",
-	)
-
+	_, err := i.executor.Run(i.artisanPath, "migrate")
 	if err != nil {
 		return err
 	}
@@ -305,12 +304,7 @@ func (i *Installer) getOrCreateAppKey() (string, error) {
 	file := path.Join(i.dataDir, ".app_key")
 	_, err := os.Stat(file)
 	if os.IsNotExist(err) {
-		secret, err := i.executor.Run(
-			path.Join(i.appDir, App, "/bin/php.sh"),
-			path.Join(i.appDir, App, "/var/www/app/artisan"),
-			"key:generate",
-			"--show",
-		)
+		secret, err := i.executor.Run(i.artisanPath, "key:generate", "--show")
 		if err != nil {
 			return "", err
 		}
