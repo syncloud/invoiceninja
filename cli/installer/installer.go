@@ -104,6 +104,15 @@ func (i *Installer) Configure() error {
 		}
 	}
 
+	_, err := i.executor.Run(
+		path.Join(i.appDir, "invoiceninja/bin/artisan.sh"),
+		"migrate",
+	)
+
+	if err != nil {
+		return err
+	}
+
 	return i.UpdateVersion()
 }
 
