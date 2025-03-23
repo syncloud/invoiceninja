@@ -107,7 +107,7 @@ func (i *Installer) Configure() error {
 		}
 	}
 
-	_, err := i.executor.Run(i.artisanPath, "migrate")
+	_, err := i.executor.Run(i.artisanPath, "migrate", "--force")
 	if err != nil {
 		return err
 	}
