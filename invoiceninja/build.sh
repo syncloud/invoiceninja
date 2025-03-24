@@ -68,7 +68,8 @@ cp -r vendor/socialiteproviders/authelia ${BUILD_DIR}/var/www/app/vendor/sociali
 
 wget https://github.com/cyberb/invoiceninja/archive/refs/heads/v5-stable.tar.gz
 tar xf v5-stable.tar.gz
-cp invoiceninja-5-stable/app/Http/Controllers/Auth/LoginController.php ${BUILD_DIR}/var/www/app
-cp invoiceninja-5-stable/app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app
-cp invoiceninja-5-stable/app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app
-cp invoiceninja-5-stable/config/services.php ${BUILD_DIR}/var/www/app
+cp invoiceninja-5-stable/app/Http/Controllers/Auth/LoginController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers/Auth
+cp invoiceninja-5-stable/app/Http/Controllers/BaseController.php {BUILD_DIR}/var/www/app/app/Http/Controllers
+cp invoiceninja-5-stable/app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app/app/Libraries/OAuth
+cp invoiceninja-5-stable/app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app/app/Providers
+cp invoiceninja-5-stable/config/services.php ${BUILD_DIR}/var/www/app/config
