@@ -7,8 +7,9 @@ VERSION=$1
 SNAP=/snap/invoiceninja/current
 SNAP_DATA=/var$SNAP
 BUILD_DIR=${DIR}/../build/snap/invoiceninja
-cp -r $BUILD_DIR $BUILD_DIR.test
-BUILD_DIR=$BUILD_DIR.test
+TEST_DIR=${DIR}/../build/invoiceninja.test
+cp -r $BUILD_DIR $TEST_DIR
+BUILD_DIR=$TEST_DIR
 sed -i "s#$SNAP/invoiceninja#$BUILD_DIR#g" ${BUILD_DIR}/usr/local/etc/php/php.ini
 cd $BUILD_DIR
 mkdir -p framework/{sessions,views,cache}

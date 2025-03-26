@@ -63,8 +63,8 @@ cp $DIR/../config/php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-php-fpm.c
 cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 #cd ${BUILD_DIR}/var/www/app
-${BUILD_DIR}/bin/composer.sh require socialiteproviders/authelia
-cp -r vendor/socialiteproviders/authelia ${BUILD_DIR}/var/www/app/vendor/socialiteproviders/
+#${BUILD_DIR}/bin/composer.sh require socialiteproviders/authelia
+#cp -r vendor/socialiteproviders/authelia ${BUILD_DIR}/var/www/app/vendor/socialiteproviders/
 
 wget https://github.com/cyberb/invoiceninja/archive/refs/heads/v5-stable.tar.gz
 tar xf v5-stable.tar.gz
