@@ -70,16 +70,23 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
+             name: 'web',
+             image: 'node:20.9.0',
+             commands: [
+               './web/build.sh ' + version,
+             ],
+           },
+           {
              name: 'invoice ninja',
              image: 'docker:' + dind,
              commands: [
                './invoiceninja/build.sh ' + version,
              ],
-environment: {
-        GITHUB_TOKEN: {
-          from_secret: 'GITHUB_TOKEN',
-        }
-      },
+             environment: {
+               GITHUB_TOKEN: {
+                 from_secret: 'GITHUB_TOKEN',
+               },
+             },
              volumes: [
                {
                  name: 'dockersock',
