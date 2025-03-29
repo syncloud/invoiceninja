@@ -70,13 +70,6 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
-             name: 'web',
-             image: 'node:20.9.0',
-             commands: [
-               './web/build.sh ' + version,
-             ],
-           },
-           {
              name: 'server',
              image: 'php:8.2.28-bullseye',
              commands: [
@@ -87,6 +80,13 @@ local build(arch, test_ui, dind) = [{
                  from_secret: 'GITHUB_TOKEN',
                },
              },
+           },
+           {
+             name: 'web',
+             image: 'node:20.9.0',
+             commands: [
+               './web/build.sh ' + version,
+             ],
            },
            {
              name: 'patch',
