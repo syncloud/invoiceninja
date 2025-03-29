@@ -77,7 +77,19 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
-             name: 'invoice ninja',
+             name: 'server',
+             image: 'php:8.2.28-bullseye',
+             commands: [
+               './server/build.sh ' + version,
+             ],
+             environment: {
+               GITHUB_TOKEN: {
+                 from_secret: 'GITHUB_TOKEN',
+               },
+             },
+           },
+           {
+             name: 'patch',
              image: 'docker:' + dind,
              commands: [
                './invoiceninja/build.sh ' + version,
@@ -95,7 +107,7 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
-             name: 'invoice ninja test',
+             name: 'patch test',
              image: 'syncloud/platform-buster-' + arch + ':' + platform,
              commands: [
                './invoiceninja/test.sh',
