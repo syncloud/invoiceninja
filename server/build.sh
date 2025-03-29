@@ -4,6 +4,8 @@ cd ${DIR}
 
 VERSION=$1
 BUILD_DIR=${DIR}/../build
+apt update
+apt install -y wget
 
 cd ${BUILD_DIR}
 wget --progress=dot:giga https://github.com/cyberb/invoiceninja/archive/refs/heads/v5-stable.tar.gz
