@@ -75,5 +75,10 @@ cp invoiceninja-5-stable/app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app/
 cp invoiceninja-5-stable/app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app/app/Providers
 cp invoiceninja-5-stable/config/services.php ${BUILD_DIR}/var/www/app/config
 
-cp ${BUILD_DIR}/var/www/app/public/index.php ${DIR}/../build/snap/web/
-#cp -r ${DIR}/../build/snap/web/* ${BUILD_DIR}/var/www/app/public/
+cd invoiceninja-5-stable
+cp -r ${DIR}/../build/web/dist/* public/
+npm i
+npm run production
+rm -rf ${BUILD_DIR}/var/www/app/public
+mv public/index.html public/index.php
+mv public ${BUILD_DIR}/var/www/app/public
