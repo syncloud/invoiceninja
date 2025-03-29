@@ -20,13 +20,13 @@ sed -i 's/VITE_IS_HOSTED=.*/VITE_IS_HOSTED=true/g' .env
 sed -i 's/VITE_IS_TEST=.*/VITE_IS_TEST=false/' .env
 cp ${BUILD_DIR}/server/vite.config.ts.react vite.config.js
 sed -i '/"version"/c\  "version": " Latest Build - '`date +%Y.%m.%d`'",' package.json
-npm i
+npm i --ignore-scripts
 NODE_OPTIONS="--max-old-space-size=6144" npm run build
 ls -la dist/
 
 
 cd ${BUILD_DIR}/server
 cp -r ${BUILD_DIR}/web/dist/* public/
-npm i
+npm i 
 npm run production
 mv public/index.html public/index.php
