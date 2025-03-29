@@ -75,4 +75,4 @@ cp invoiceninja-5-stable/app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app/
 cp invoiceninja-5-stable/app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app/app/Providers
 cp invoiceninja-5-stable/config/services.php ${BUILD_DIR}/var/www/app/config
 
-cp -r ${DIR}/../build/snap/web/* ${BUILD_DIR}/public/
+cp -r ${DIR}/../build/snap/web/* ${BUILD_DIR}/var/www/app/public/
