@@ -69,16 +69,29 @@ cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 wget https://github.com/cyberb/invoiceninja/archive/refs/heads/v5-stable.tar.gz
 tar xf v5-stable.tar.gz
-cp invoiceninja-5-stable/app/Http/Controllers/Auth/LoginController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers/Auth
-cp invoiceninja-5-stable/app/Http/Controllers/BaseController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers
-cp invoiceninja-5-stable/app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app/app/Libraries/OAuth
-cp invoiceninja-5-stable/app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app/app/Providers
-cp invoiceninja-5-stable/config/services.php ${BUILD_DIR}/var/www/app/config
+mv invoiceninja-5-stable server
+cp server/app/Http/Controllers/Auth/LoginController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers/Auth
+cp server/app/Http/Controllers/BaseController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers
+cp server/app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app/app/Libraries/OAuth
+cp server/app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app/app/Providers
+cp server/config/services.php ${BUILD_DIR}/var/www/app/config
 
-cd invoiceninja-5-stable
+cd ${DIR}/../build/web
+cp .env.example .env
+set -i 's/VITE_IS_HOSTED=.*/VITE_IS_HOSTED=true/g' .env
+sed -i 's/VITE_IS_TEST=.*/VITE_IS_TEST=false/' .env
+cp {DIR}/../build/server/vite.config.ts.react vite.config.js
+sed -i '/"version"/c\  "version": " Latest Build - ${{ env.current_date }}",' package.json
+npm i
+NODE_OPTIONS="--max-old-space-size=6144" npm run build
+ls -la dist/
+
+
+cd ${DIR}/../build/server
+
 cp -r ${DIR}/../build/web/dist/* public/
 npm i
 npm run production
-rm -rf ${BUILD_DIR}/var/www/app/public
 mv public/index.html public/index.php
+rm -rf ${BUILD_DIR}/var/www/app/public
 mv public ${BUILD_DIR}/var/www/app/public
