@@ -13,7 +13,7 @@ tar xf v5-stable.tar.gz
 mv invoiceninja-5-stable server
 
 cd ${BUILD_DIR}/server
-
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer 
 composer config -g github-oauth.github.com $GITHUB_TOKEN
 composer install --no-dev
 composer require socialiteproviders/authelia
