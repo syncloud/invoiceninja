@@ -13,4 +13,5 @@ cp .env.example .env
 set -i 's/VITE_IS_HOSTED=.*/VITE_IS_HOSTED=true/g' .env
 npm ci --ignore-scripts
 NODE_OPTIONS="--max-old-space-size=6144" npm run build
+ls -la dist/
 mv dist ${BUILD_DIR}
