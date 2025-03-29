@@ -12,5 +12,5 @@ cd invoiceninja-ui-main
 cp .env.example .env
 set -i 's/VITE_IS_HOSTED=.*/VITE_IS_HOSTED=true/g' .env
 npm ci --ignore-scripts
-npm run build
+NODE_OPTIONS="--max-old-space-size=6144" npm run build
 mv dist ${BUILD_DIR}
