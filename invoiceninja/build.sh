@@ -70,5 +70,7 @@ cp app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app/app/Libraries/OAuth
 cp app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app/app/Providers
 cp config/services.php ${BUILD_DIR}/var/www/app/config
 
+ls -la ${BUILD_DIR}/usr/local/etc/php/conf.d
+
 rm -rf ${BUILD_DIR}/var/www/app/public
 mv public ${BUILD_DIR}/var/www/app/public

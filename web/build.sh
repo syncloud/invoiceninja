@@ -20,13 +20,18 @@ sed -i '/"version"/c\  "version": " Latest Build - '`date +%Y.%m.%d`'",' package
 npm config set fetch-retry-mintimeout 200000
 npm config set fetch-retry-maxtimeout 1200000
 
-npm i --ignore-scripts
+for i in {1..5}; do
+  npm i --ignore-scripts && break || sleep 15
+done
+
 NODE_OPTIONS="--max-old-space-size=6144" npm run build
 ls -la dist/
 
 
 cd ${BUILD_DIR}/server
 cp -r ${BUILD_DIR}/web/dist/* public/
-npm i 
+for i in {1..5}; do
+  npm i && break || sleep 15
+done
 npm run production
 mv public/index.html public/index.php
