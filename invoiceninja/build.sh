@@ -19,8 +19,9 @@ tar xf app.tar
 cp -r usr ${BUILD_DIR}
 cp -r bin ${BUILD_DIR}
 cp -r lib ${BUILD_DIR}
-mkdir ${BUILD_DIR}/var
-cp -r var/www ${BUILD_DIR}/var
+mkdir ${BUILD_DIR}/var/www
+mv ${DIR}/../build/server ${BUILD_DIR}/var/www/app
+#cp -r var/www ${BUILD_DIR}/var
 
 EXT=$(echo usr/local/lib/php/extensions/no-debug*)
 SNAP=/snap/invoiceninja/current
@@ -63,14 +64,13 @@ rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-docker.conf
 cp $DIR/../config/php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-php-fpm.conf
 cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
-cd ${DIR}/../build/server
-cp app/Http/Controllers/Auth/LoginController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers/Auth
-cp app/Http/Controllers/BaseController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers
-cp app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app/app/Libraries/OAuth
-cp app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app/app/Providers
-cp config/services.php ${BUILD_DIR}/var/www/app/config
+#cp app/Http/Controllers/Auth/LoginController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers/Auth
+#cp app/Http/Controllers/BaseController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers
+#cp app/Libraries/OAuth/OAuth.php ${BUILD_DIR}/var/www/app/app/Libraries/OAuth
+#cp app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app/app/Providers
+#cp config/services.php ${BUILD_DIR}/var/www/app/config
 
 ls -la ${BUILD_DIR}/usr/local/etc/php/conf.d
 
-rm -rf ${BUILD_DIR}/var/www/app/public
-mv public ${BUILD_DIR}/var/www/app/public
+#rm -rf ${BUILD_DIR}/var/www/app/public
+#mv public ${BUILD_DIR}/var/www/app/public
