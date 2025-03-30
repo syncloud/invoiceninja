@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/bash -ex
 DIR=$( cd "$( dirname "$0" )" && pwd )
 cd ${DIR}
 
@@ -48,4 +48,7 @@ mv invoiceninja-5-stable server
 cd ${BUILD_DIR}/server
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer 
 composer config -g github-oauth.github.com $GITHUB_TOKEN
-composer install --no-dev
+
+for i in {1..5}; do
+  composer install --no-dev && break || sleep 15
+done
