@@ -19,7 +19,7 @@ tar xf app.tar
 cp -r usr ${BUILD_DIR}
 cp -r bin ${BUILD_DIR}
 cp -r lib ${BUILD_DIR}
-mkdir ${BUILD_DIR}/var/www
+mkdir -p ${BUILD_DIR}/var/www
 mv ${DIR}/../build/server ${BUILD_DIR}/var/www/app
 #cp -r var/www ${BUILD_DIR}/var
 
