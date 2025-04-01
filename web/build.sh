@@ -33,5 +33,8 @@ cp -r ${BUILD_DIR}/web/dist/* public/
 for i in {1..5}; do
   npm i && break || sleep 15
 done
+
+echo $?
+
 npm run production
 mv public/index.html public/index.php
