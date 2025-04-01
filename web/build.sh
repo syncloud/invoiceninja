@@ -21,7 +21,7 @@ npm config set fetch-retry-mintimeout 200000
 npm config set fetch-retry-maxtimeout 1200000
 
 for i in {1..5}; do
-  npm i --ignore-scripts && break || sleep 15
+  npm i --ignore-scripts && break || rm -rf node_modules && sleep 15
 done
 
 NODE_OPTIONS="--max-old-space-size=6144" npm run build
@@ -31,7 +31,7 @@ ls -la dist/
 cd ${BUILD_DIR}/server
 cp -r ${BUILD_DIR}/web/dist/* public/
 for i in {1..5}; do
-  npm i && break || sleep 15
+  npm i && break || rm -rf node_modules && sleep 15
 done
 
 echo $?
