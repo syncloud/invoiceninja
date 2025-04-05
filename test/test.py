@@ -72,9 +72,9 @@ def test_access_change_event(device):
     device.run_ssh('snap run invoiceninja.access-change > {0}/access-change.log'.format(TMP_DIR))
 
 
-#def test_api(app_domain):
-#    response = requests.get('https://{0}/api/'.format(app_domain), verify=False)
-#    assert response.status_code == 200, response.text
+def test_api(app_domain):
+    response = requests.get('https://{0}/api/v1/ping'.format(app_domain), verify=False)
+    assert response.status_code == 403, response.text
 
 
 def test_upgrade(app_archive_path, domain, device_password):
