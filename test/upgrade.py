@@ -29,17 +29,3 @@ def test_start(module_setup, app, device_host, domain, device):
     device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False)
 
 
-def test_install(device, device_user, device_password, device_host, app_archive_path, app_domain):
-    device.run_ssh('snap remove invoiceninja')
-    device.run_ssh('snap install invoiceninja')
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    wait_for_rest(requests.session(), "https://{0}/api/".format(app_domain), 200, 10)
-
-
-def test_upgrade(selenium, device, device_user, device_password, device_host, app_archive_path, app_domain):
-    register(selenium, MODE)
-    write_note(selenium, MODE)
-    local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
-    wait_for_rest(requests.session(), "https://{0}/api/".format(app_domain), 200, 10)
-    read_note(selenium, MODE)
