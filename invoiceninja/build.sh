@@ -27,7 +27,7 @@ cp -r var/www ${BUILD_DIR}/var
 
 #mkdir -p ${BUILD_DIR}/var/www
 #cp -r ${DIR}/../build/server/public/* ${BUILD_DIR}/var/www/app/public/
-rsync -av ${DIR}/../build/server ${BUILD_DIR}/var/www/app --exclude public
+rsync -a ${DIR}/../build/server ${BUILD_DIR}/var/www/app
 
 EXT=$(echo usr/local/lib/php/extensions/no-debug*)
 SNAP=/snap/invoiceninja/current

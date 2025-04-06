@@ -37,4 +37,4 @@ done
 echo $?
 
 npm run production
-mv public/index.html public/index.php
+#mv public/index.html public/index.php
