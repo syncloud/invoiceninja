@@ -4,6 +4,8 @@ cd ${DIR}
 
 VERSION=$1
 
+apk add rsync
+
 BUILD_DIR=${DIR}/../build/snap/invoiceninja
 while ! docker ps ; do
   sleep 1
@@ -24,8 +26,8 @@ mkdir -p ${BUILD_DIR}/var
 cp -r var/www ${BUILD_DIR}/var
 
 #mkdir -p ${BUILD_DIR}/var/www
-cp -r ${DIR}/../build/server/public/* ${BUILD_DIR}/var/www/app/public/
-
+#cp -r ${DIR}/../build/server/public/* ${BUILD_DIR}/var/www/app/public/
+rsync -av ${DIR}/../build/server ${BUILD_DIR}/var/www/app --exclude public
 
 EXT=$(echo usr/local/lib/php/extensions/no-debug*)
 SNAP=/snap/invoiceninja/current
