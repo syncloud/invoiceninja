@@ -52,3 +52,6 @@ composer config -g github-oauth.github.com $GITHUB_TOKEN
 for i in {1..5}; do
   composer install --no-dev && break || sleep 15
 done
+
+ls -la .
+ls -la config

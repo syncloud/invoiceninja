@@ -25,7 +25,7 @@ cp -r lib ${BUILD_DIR}
 #mkdir -p ${BUILD_DIR}/var
 #cp -r var/www ${BUILD_DIR}/var
 
-mkdir -p ${BUILD_DIR}/var/www
+mkdir -p ${BUILD_DIR}/var/www/app
 #cp -r ${DIR}/../build/server/public/* ${BUILD_DIR}/var/www/app/public/
 rsync -a ${DIR}/../build/server ${BUILD_DIR}/var/www/app
 
