@@ -22,10 +22,10 @@ cp -r usr ${BUILD_DIR}
 cp -r bin ${BUILD_DIR}
 cp -r lib ${BUILD_DIR}
 
-mkdir -p ${BUILD_DIR}/var
-cp -r var/www ${BUILD_DIR}/var
+#mkdir -p ${BUILD_DIR}/var
+#cp -r var/www ${BUILD_DIR}/var
 
-#mkdir -p ${BUILD_DIR}/var/www
+mkdir -p ${BUILD_DIR}/var/www
 #cp -r ${DIR}/../build/server/public/* ${BUILD_DIR}/var/www/app/public/
 rsync -a ${DIR}/../build/server ${BUILD_DIR}/var/www/app
 
