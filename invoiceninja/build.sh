@@ -15,6 +15,9 @@ docker build --build-arg GITHUB_TOKEN=$GITHUB_TOKEN --build-arg VERSION=$1 -t ap
 docker create --name=app app:syncloud
 mkdir -p ${BUILD_DIR}
 cd ${DIR}/../build
+mkdir docker
+cd docker
+
 docker export app -o app.tar
 tar xf app.tar
 
@@ -27,7 +30,11 @@ cp -r lib ${BUILD_DIR}
 
 mkdir -p ${BUILD_DIR}/var/www/app
 #cp -r ${DIR}/../build/server/public/* ${BUILD_DIR}/var/www/app/public/
+ls -la ${DIR}/../build/server
+ls -la ${DIR}/../build/server/config
 rsync -a ${DIR}/../build/server ${BUILD_DIR}/var/www/app
+ls -la ${BUILD_DIR}/var/www/app
+ls -la ${BUILD_DIR}/var/www/app/config
 
 EXT=$(echo usr/local/lib/php/extensions/no-debug*)
 SNAP=/snap/invoiceninja/current
