@@ -29,10 +29,10 @@ cp -r lib ${BUILD_DIR}
 #cp -r var/www ${BUILD_DIR}/var
 
 mkdir -p ${BUILD_DIR}/var/www/app
-#cp -r ${DIR}/../build/server/public/* ${BUILD_DIR}/var/www/app/public/
 ls -la ${DIR}/../build/server
 ls -la ${DIR}/../build/server/config
-rsync -a ${DIR}/../build/server ${BUILD_DIR}/var/www/app
+cp -r ${DIR}/../build/server/* ${BUILD_DIR}/var/www/app/
+#rsync -a ${DIR}/../build/server ${BUILD_DIR}/var/www/app
 ls -la ${BUILD_DIR}/var/www/app
 ls -la ${BUILD_DIR}/var/www/app/config
 
