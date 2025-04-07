@@ -1,11 +1,8 @@
-from os.path import dirname, join
-from subprocess import check_output
-
 import pytest
+from os.path import dirname, join
 from selenium.webdriver.common.by import By
+from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
-
-from test.lib import register, write_note, read_note
 
 DIR = dirname(__file__)
 
@@ -33,3 +30,6 @@ def test_start(module_setup):
     pass
 
 
+def test_index(selenium):
+    selenium.find_by(By.XPATH, "//h2[text()='Login']")
+    selenium.screenshot('index')
