@@ -30,6 +30,8 @@ ls -la dist/
 
 cd ${BUILD_DIR}/server
 cp -r ${BUILD_DIR}/web/dist/* public/
+mv public/index.html resources/views/react/index.blade.php
+
 for i in {1..5}; do
   npm i && break || rm -rf node_modules && sleep 15
 done
