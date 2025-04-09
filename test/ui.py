@@ -26,10 +26,11 @@ def module_setup(request, device, artifact_dir, ui_mode, data_dir, app, domain, 
         request.addfinalizer(module_teardown)
 
 
-def test_start(module_setup):
-    pass
+def test_start(module_setup, app, domain, device_host):
+    add_host_alias(app, device_host, domain)
 
 
-def test_index(selenium):
+def test_login(selenium, device_user, device_password):
+    selenium.open_app()
     selenium.find_by(By.XPATH, "//h2[text()='Login']")
-    selenium.screenshot('index')
+    selenium.screenshot('login')
