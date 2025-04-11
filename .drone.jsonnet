@@ -162,8 +162,9 @@ local build(arch, test_ui, dind) = [{
                                    }],
                                    commands: [
                                      'cat /etc/hosts',
-                                     'DOMAIN="' + name + '.' + distro_default + '.com"',
-                                     'getent hosts $DOMAIN | sed "s/$DOMAIN/auth.$DOMAIN.redirect/g" | sudo tee -a /etc/hosts',
+                                     'DOMAIN="' + distro_default + '.com"',
+                                     'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
+                                     'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | sudo tee -a /etc/hosts',
                                      'cat /etc/hosts',
                                      '/opt/bin/entry_point.sh',
                                    ],

@@ -241,7 +241,7 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 	redirectUri := "/auth/authelia"
-	password, err := i.platformClient.RegisterOIDCClient(App, redirectUri, false, "client_secret_basic")
+	password, err := i.platformClient.RegisterOIDCClient(App, redirectUri, false, "client_secret_post")
 	if err != nil {
 		return err
 	}
@@ -317,3 +317,4 @@ func (i *Installer) getOrCreateAppKey() (string, error) {
 	}
 	return string(content), nil
 }
+
