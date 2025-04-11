@@ -32,5 +32,5 @@ def test_start(module_setup, app, domain, device_host):
 
 def test_login(selenium, device_user, device_password):
     selenium.open_app()
-    selenium.find_by(By.XPATH, "//h2[text()='Login']")
+    selenium.find_by(By.XPATH, "//p[text()='Log in with Syncloud']")
     selenium.screenshot('login')
