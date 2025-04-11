@@ -240,7 +240,7 @@ func (i *Installer) UpdateConfigs() error {
 	if err != nil {
 		return err
 	}
-	redirectUri := "/auth/authelia/callback"
+	redirectUri := "/auth/authelia"
 	password, err := i.platformClient.RegisterOIDCClient(App, redirectUri, false, "client_secret_basic")
 	if err != nil {
 		return err

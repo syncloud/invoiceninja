@@ -32,5 +32,14 @@ def test_start(module_setup, app, domain, device_host):
 
 def test_login(selenium, device_user, device_password):
     selenium.open_app()
-    selenium.find_by(By.XPATH, "//p[text()='Log in with Syncloud']")
+    selenium.find_by(By.XPATH, "//button[contains(text(), 'Log in with Syncloud')]").click()
+    #selenium.find_by(By.XPATH, "//a[contains(.,'My Syncloud')]").click()
+    selenium.find_by(By.ID, "username-textfield").send_keys(device_user)
+    password = selenium.find_by(By.ID, "password-textfield")
+    password.send_keys(device_password)
     selenium.screenshot('login')
+    #password.send_keys(Keys.RETURN)
+    selenium.find_by(By.ID, "sign-in-button").click()
+    selenium.find_by(By.ID, "accept-button").click()
+    selenium.find_by(By.CLASS_NAME, "publish-button-label")
+    selenium.screenshot('main')
