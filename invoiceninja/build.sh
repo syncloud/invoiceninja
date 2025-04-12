@@ -75,6 +75,7 @@ rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/docker.conf
 rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-docker.conf
 
 cp $DIR/../config/php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-php-fpm.conf
+cp $DIR/../config/php.ini ${BUILD_DIR}/usr/local/etc/php/conf.d/syncloud.ini
 cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 #cp app/Http/Controllers/Auth/LoginController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers/Auth
