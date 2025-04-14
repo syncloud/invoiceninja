@@ -3,7 +3,7 @@ local version = '5.11';
 local nginx = '1.24.0';
 local redis = '7.0.15';
 local mariadb = '10.5.16-alpine';
-local browser = 'firefox';
+local browser = 'chrome';
 local platform = '25.02';
 local selenium = '4.21.0-20240517';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
@@ -361,3 +361,4 @@ local build(arch, test_ui, dind) = [{
 
 build('amd64', true, '20.10.21-dind') +
 build('arm64', false, '20.10.21-dind')
+
