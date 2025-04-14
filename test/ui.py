@@ -11,7 +11,7 @@ TMP_DIR = '/tmp/syncloud/ui'
 MODE = 'install'
 
 @pytest.fixture(scope="session")
-def module_setup(request, device, artifact_dir, ui_mode, data_dir, app, domain, device_host, local):
+def module_setup(request, device, artifact_dir, ui_mode, data_dir, app, domain, device_host, local, selenium):
     if not local:
         add_host_alias(app, device_host, domain)
         device.activated()
