@@ -28,6 +28,19 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
+               name: "php",
+               image: "docker:" + dind,
+               commands: [
+                   "./php/build.sh"
+               ],
+               volumes: [
+                   {
+                       name: "dockersock",
+                       path: "/var/run"
+                   }
+               ]
+           },
+           {
              name: 'redis',
              image: 'redis:' + redis,
              commands: [
@@ -75,35 +88,12 @@ local build(arch, test_ui, dind) = [{
              commands: [
                './server/build.sh ' + version,
              ],
-             environment: {
-               GITHUB_TOKEN: {
-                 from_secret: 'GITHUB_TOKEN',
-               },
-             },
            },
            {
              name: 'web',
              image: 'node:20.9.0',
              commands: [
                './web/build.sh ' + version,
-             ],
-           },
-           {
-             name: 'patch',
-             image: 'docker:' + dind,
-             commands: [
-               './invoiceninja/build.sh ' + version,
-             ],
-             environment: {
-               GITHUB_TOKEN: {
-                 from_secret: 'GITHUB_TOKEN',
-               },
-             },
-             volumes: [
-               {
-                 name: 'dockersock',
-                 path: '/var/run',
-               },
              ],
            },
            {

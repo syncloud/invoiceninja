@@ -40,7 +40,7 @@ EXT=$(echo usr/local/lib/php/extensions/no-debug*)
 SNAP=/snap/invoiceninja/current
 SNAP_DATA=/var$SNAP
 RUNTIME_DIR=$SNAP/invoiceninja
-echo "extension_dir=$RUNTIME_DIR/$EXT" >> ${BUILD_DIR}/usr/local/etc/php/php.ini
+#echo "extension_dir=$RUNTIME_DIR/$EXT" >> ${BUILD_DIR}/usr/local/etc/php/php.ini
 
 sed -i "s#include=.*#include=$RUNTIME_DIR/usr/local/etc/php-fpm.d/*.conf#g" ${BUILD_DIR}/usr/local/etc/php-fpm.conf
 grep include ${BUILD_DIR}/usr/local/etc/php-fpm.conf
