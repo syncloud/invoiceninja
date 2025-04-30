@@ -89,6 +89,7 @@ docker-php-ext-install -j2 gd
 
 cp -r /usr ${BUILD_DIR}/
 cp -r /lib ${BUILD_DIR}/
+cp -r /bin ${BUILD_DIR}
 
 mv ${BUILD_DIR}/usr/lib/*-linux*/ImageMagick-*/modules-*/coders ${BUILD_DIR}/usr/lib/ImageMagickCoders
 ls -la ${BUILD_DIR}/usr/lib/ImageMagickCoders

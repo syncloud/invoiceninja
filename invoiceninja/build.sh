@@ -36,10 +36,10 @@ cp -r ${DIR}/../build/server/* ${BUILD_DIR}/var/www/app/
 ls -la ${BUILD_DIR}/var/www/app
 ls -la ${BUILD_DIR}/var/www/app/config
 
-EXT=$(echo usr/local/lib/php/extensions/no-debug*)
+#EXT=$(echo usr/local/lib/php/extensions/no-debug*)
 SNAP=/snap/invoiceninja/current
 SNAP_DATA=/var$SNAP
-RUNTIME_DIR=$SNAP/invoiceninja
+#RUNTIME_DIR=$SNAP/invoiceninja
 #echo "extension_dir=$RUNTIME_DIR/$EXT" >> ${BUILD_DIR}/usr/local/etc/php/php.ini
 
 #sed -i "s#include=.*#include=$RUNTIME_DIR/usr/local/etc/php-fpm.d/*.conf#g" ${BUILD_DIR}/usr/local/etc/php-fpm.conf
@@ -75,8 +75,8 @@ ln -s $SNAP_DATA/config/.env ${BUILD_DIR}/var/www/app/.env
 #rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-docker.conf
 
 #cp $DIR/../config/php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-php-fpm.conf
-cp $DIR/../config/php.ini ${BUILD_DIR}/usr/local/etc/php/conf.d/syncloud.ini
-cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
+#cp $DIR/../config/php.ini ${BUILD_DIR}/usr/local/etc/php/conf.d/syncloud.ini
+#cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
 #cp app/Http/Controllers/Auth/LoginController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers/Auth
 #cp app/Http/Controllers/BaseController.php ${BUILD_DIR}/var/www/app/app/Http/Controllers
@@ -84,7 +84,7 @@ cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 #cp app/Providers/EventServiceProvider.php ${BUILD_DIR}/var/www/app/app/Providers
 #cp config/services.php ${BUILD_DIR}/var/www/app/config
 
-ls -la ${BUILD_DIR}/usr/local/etc/php/conf.d
+#ls -la ${BUILD_DIR}/usr/local/etc/php/conf.d
 
 #rm -rf ${BUILD_DIR}/var/www/app/public
 #mv public ${BUILD_DIR}/var/www/app/public
