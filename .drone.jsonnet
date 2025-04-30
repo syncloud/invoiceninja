@@ -1,5 +1,6 @@
 local name = 'invoiceninja';
 local version = '5.11';
+local php = "8.3.9-fpm-bullseye";
 local nginx = '1.24.0';
 local redis = '7.0.15';
 local mariadb = '10.5.16-alpine';
@@ -29,15 +30,9 @@ local build(arch, test_ui, dind) = [{
            },
            {
                name: "php",
-               image: "docker:" + dind,
+               image: "php:" + php,
                commands: [
                    "./php/build.sh"
-               ],
-               volumes: [
-                   {
-                       name: "dockersock",
-                       path: "/var/run"
-                   }
                ]
            },
            {
@@ -358,4 +353,3 @@ local build(arch, test_ui, dind) = [{
 
 build('amd64', true, '20.10.21-dind') +
 build('arm64', false, '20.10.21-dind')
-
