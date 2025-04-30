@@ -87,6 +87,8 @@ docker-php-ext-install pdo pdo_pgsql
 docker-php-ext-configure gd --with-freetype --with-jpeg
 docker-php-ext-install -j2 gd
 
+apt remove -y git
+
 cp -r /usr ${BUILD_DIR}/
 cp -r /lib ${BUILD_DIR}/
 cp -r /bin ${BUILD_DIR}
