@@ -6,7 +6,7 @@ VERSION=$1
 
 #SNAP=/snap/invoiceninja/current
 #SNAP_DATA=/var$SNAP
-#BUILD_DIR=${DIR}/../build/snap/invoiceninja
+BUILD_DIR=${DIR}/../build/snap/php
 #TEST_DIR=${DIR}/../build/invoiceninja.test
 #cp -r $BUILD_DIR $TEST_DIR
 #BUILD_DIR=$TEST_DIR
