@@ -4,6 +4,7 @@ cd ${DIR}
 
 VERSION=$1
 BUILD_DIR=${DIR}/../build
+SERVER_DIR=${BUILD_DIR}/snap/server
 
 cd ${BUILD_DIR}
 wget --progress=dot:giga https://github.com/cyberb/invoiceninja-ui/archive/refs/heads/main.tar.gz
@@ -28,7 +29,7 @@ NODE_OPTIONS="--max-old-space-size=6144" npm run build
 ls -la dist/
 
 
-cd ${BUILD_DIR}/server
+cd ${SERVER_DIR}
 cp -r ${BUILD_DIR}/web/dist/* public/
 mv public/index.html resources/views/react/index.blade.php
 
