@@ -41,6 +41,13 @@ local build(arch, test_ui, dind) = [{
                ]
            },
            {
+             name: 'php test',
+             image: 'syncloud/platform-buster-' + arch + ':' + platform,
+             commands: [
+               './php/test.sh',
+             ],
+           },
+           {
              name: 'redis',
              image: 'redis:' + redis,
              commands: [
@@ -90,17 +97,17 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
+             name: 'server test',
+             image: 'syncloud/platform-buster-' + arch + ':' + platform,
+             commands: [
+               './server/test.sh',
+             ],
+           },
+           {
              name: 'web',
              image: 'node:20.9.0',
              commands: [
                './web/build.sh ' + version,
-             ],
-           },
-           {
-             name: 'patch test',
-             image: 'syncloud/platform-buster-' + arch + ':' + platform,
-             commands: [
-               './invoiceninja/test.sh',
              ],
            },
            {

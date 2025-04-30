@@ -42,8 +42,8 @@ SNAP_DATA=/var$SNAP
 RUNTIME_DIR=$SNAP/invoiceninja
 #echo "extension_dir=$RUNTIME_DIR/$EXT" >> ${BUILD_DIR}/usr/local/etc/php/php.ini
 
-sed -i "s#include=.*#include=$RUNTIME_DIR/usr/local/etc/php-fpm.d/*.conf#g" ${BUILD_DIR}/usr/local/etc/php-fpm.conf
-grep include ${BUILD_DIR}/usr/local/etc/php-fpm.conf
+#sed -i "s#include=.*#include=$RUNTIME_DIR/usr/local/etc/php-fpm.d/*.conf#g" ${BUILD_DIR}/usr/local/etc/php-fpm.conf
+#grep include ${BUILD_DIR}/usr/local/etc/php-fpm.conf
 
 #sed -i "s#;pid =.*#pid = $SNAP_DATA/php-fpm.pid#g" ${BUILD_DIR}/usr/local/etc/php-fpm.conf
 #grep pid ${BUILD_DIR}/usr/local/etc/php-fpm.conf
@@ -71,10 +71,10 @@ grep return ${BUILD_DIR}/var/www/app/bootstrap/app.php
 rm -rf ${BUILD_DIR}/var/www/app/.env
 ln -s $SNAP_DATA/config/.env ${BUILD_DIR}/var/www/app/.env
 
-rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/docker.conf
-rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-docker.conf
+#rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/docker.conf
+#rm ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-docker.conf
 
-cp $DIR/../config/php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-php-fpm.conf
+#cp $DIR/../config/php-fpm.conf ${BUILD_DIR}/usr/local/etc/php-fpm.d/zz-php-fpm.conf
 cp $DIR/../config/php.ini ${BUILD_DIR}/usr/local/etc/php/conf.d/syncloud.ini
 cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
 
