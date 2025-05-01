@@ -17,11 +17,13 @@ tar xf v5-stable.tar.gz
 mv invoiceninja-5-stable server
 cd server
 
-${BUILD_DIR}/php/bin/php.sh ${BUILD_DIR}/php/bin/composer config --global github-oauth.github.com $GITHUB_TOKEN
-${BUILD_DIR}/php/bin/php.sh ${BUILD_DIR}/php/bin/composer install --no-dev
+composer config --global github-oauth.github.com $GITHUB_TOKEN
+composer install --no-dev
 
 SNAP=/snap/invoiceninja/current
 SNAP_DATA=/var$SNAP
+mkdir -p bin
+cp -r $DIR/bin/* bin
 sed -i "s/'driver' => '.*'/'driver' => 'syslog'/g" server/config/logging.php
 grep driver server/config/logging.php
 sed -i "s#'host'.*REDIS_HOST.*#'path'=>env('REDIS_PATH'),#g" server/config/database.php

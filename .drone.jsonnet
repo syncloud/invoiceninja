@@ -86,7 +86,7 @@ local build(arch, test_ui, dind) = [{
            },
            {
              name: 'server',
-             image: 'php:8.2.28-bullseye',
+             image: "php:" + php,
              commands: [
                './server/build.sh ' + version,
              ],
