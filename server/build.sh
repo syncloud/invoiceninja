@@ -17,6 +17,9 @@ tar xf v5-stable.tar.gz
 mv invoiceninja-5-stable server
 cd server
 
+wget https://getcomposer.org/installer -O - -q | php -- --quiet
+mv composer.phar /usr/local/bin/composer
+
 composer config --global github-oauth.github.com $GITHUB_TOKEN
 composer install --no-dev
 
