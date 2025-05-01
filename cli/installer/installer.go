@@ -49,7 +49,7 @@ func New(logger *zap.Logger) *Installer {
 	commonDir := fmt.Sprintf("/var/snap/%s/common", App)
 	configDir := path.Join(dataDir, "config")
 	executor := NewExecutor(logger)
-	artisanPath := path.Join(appDir, App, "/bin/artisan.sh")
+	artisanPath := path.Join(appDir, "/bin/artisan.sh")
 	return &Installer{
 		newVersionFile:     path.Join(appDir, "version"),
 		currentVersionFile: path.Join(dataDir, "version"),
@@ -317,4 +317,3 @@ func (i *Installer) getOrCreateAppKey() (string, error) {
 	}
 	return string(content), nil
 }
-

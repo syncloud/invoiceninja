@@ -40,4 +40,5 @@ done
 echo $?
 
 npm run production
+rm -rf node_modules
 #mv public/index.html public/index.php

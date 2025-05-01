@@ -1,9 +1,8 @@
 #!/bin/bash -e
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )
-export PHP_BINARY=$DIR/invoiceninja/bin/php.sh
-cd $SNAP/invoiceninja/var/www/app
-exec $DIR/invoiceninja/bin/php.sh \
-  $SNAP/invoiceninja/var/www/app/artisan \
+export PHP_BINARY=$DIR/php/bin/php.sh
+cd $SNAP/server
+exec $DIR/bin/artisan.sh \
   schedule:work \
   --verbose
