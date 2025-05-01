@@ -11,15 +11,15 @@ apt install -y \
   unzip \
   --no-install-recommends
 
-cd ${BUILD_DIR}
-wget --progress=dot:giga https://github.com/cyberb/invoiceninja/archive/refs/heads/v5-stable.tar.gz
-tar xf v5-stable.tar.gz
-mv invoiceninja-5-stable server
-cd server
-
+cd ${DIR}/../build
 wget https://getcomposer.org/installer -O - -q | php -- --quiet
 mv composer.phar /usr/local/bin/composer
 
+wget --progress=dot:giga https://github.com/cyberb/invoiceninja/archive/refs/heads/v5-stable.tar.gz
+tar xf v5-stable.tar.gz
+mv invoiceninja-5-stable $BUILD_DIR/server
+
+cd $BUILD_DIR/server
 composer config --global github-oauth.github.com $GITHUB_TOKEN
 composer install --no-dev
 
