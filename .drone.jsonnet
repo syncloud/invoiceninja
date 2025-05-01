@@ -32,7 +32,8 @@ local build(arch, test_ui, dind) = [{
                name: "php",
                image: "php:" + php,
                commands: [
-                   "./php/build.sh"
+                   "./php/build.sh",
+                   './php/build-server.sh ' + version
                ]
            },
            {
@@ -40,6 +41,7 @@ local build(arch, test_ui, dind) = [{
              image: 'syncloud/platform-buster-' + arch + ':' + platform,
              commands: [
                './php/test.sh',
+               './php/test-server.sh'
              ],
            },
            {
@@ -82,20 +84,6 @@ local build(arch, test_ui, dind) = [{
              image: 'syncloud/platform-buster-' + arch + ':' + platform,
              commands: [
                './mariadb/test.sh',
-             ],
-           },
-           {
-             name: 'server',
-             image: "php:" + php,
-             commands: [
-               './server/build.sh ' + version,
-             ],
-           },
-           {
-             name: 'server test',
-             image: 'syncloud/platform-buster-' + arch + ':' + platform,
-             commands: [
-               './server/test.sh',
              ],
            },
            {
