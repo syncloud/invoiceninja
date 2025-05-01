@@ -34,7 +34,12 @@ local build(arch, test_ui, dind) = [{
                commands: [
                    "./php/build.sh",
                    './php/build-server.sh ' + version
-               ]
+               ],
+             environment: {
+               GITHUB_TOKEN: {
+                 from_secret: 'GITHUB_TOKEN',
+               },
+             },
            },
            {
              name: 'php test',
