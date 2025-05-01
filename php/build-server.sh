@@ -27,16 +27,16 @@ SNAP=/snap/invoiceninja/current
 SNAP_DATA=/var$SNAP
 mkdir -p bin
 cp -r $DIR/bin/* bin
-sed -i "s/'driver' => '.*'/'driver' => 'syslog'/g" server/config/logging.php
-grep driver server/config/logging.php
-sed -i "s#'host'.*REDIS_HOST.*#'path'=>env('REDIS_PATH'),#g" server/config/database.php
-grep REDIS_PATH server/config/database.php
-sed -i "s#'port'.*REDIS_PORT.*#'scheme'=>'unix',#g" server/config/database.php
-grep scheme server/config/database.php
-sed -i "s#'root' => base_path().*#'root' => '$SNAP_DATA/storage',#g" server/config/filesystems.php
-grep root server/config/filesystems.php
-sed -i "s#return \$app;#\$app->useStoragePath( '$SNAP_DATA/storage' ); return \$app;#g" server/bootstrap/app.php
-grep return server/bootstrap/app.php
+sed -i "s/'driver' => '.*'/'driver' => 'syslog'/g" config/logging.php
+grep driver config/logging.php
+sed -i "s#'host'.*REDIS_HOST.*#'path'=>env('REDIS_PATH'),#g" config/database.php
+grep REDIS_PATH config/database.php
+sed -i "s#'port'.*REDIS_PORT.*#'scheme'=>'unix',#g" config/database.php
+grep scheme config/database.php
+sed -i "s#'root' => base_path().*#'root' => '$SNAP_DATA/storage',#g" config/filesystems.php
+grep root config/filesystems.php
+sed -i "s#return \$app;#\$app->useStoragePath( '$SNAP_DATA/storage' ); return \$app;#g" bootstrap/app.php
+grep return bootstrap/app.php
 
-rm -rf server/.env
-ln -s $SNAP_DATA/config/.env server/.env
+rm -rf .env
+ln -s $SNAP_DATA/config/.env .env
