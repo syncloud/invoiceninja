@@ -18,4 +18,4 @@ grep return $TEST_DIR/bootstrap/app.php
 #$TEST_DIR/bin/artisan.sh key:generate --show
 
 export PATH=$PATH:$BUILD_DIR/../php/bin
-$BUILD_DIR/bin/php.sh -c $TEST_CONFIG_DIR/php.ini artisan key:generate --show
+$BUILD_DIR/../php/bin/php.sh -c $TEST_CONFIG_DIR/php.ini artisan key:generate --show
