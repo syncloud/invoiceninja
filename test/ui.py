@@ -40,6 +40,7 @@ def test_login(selenium, device_user, device_password):
     password.send_keys(device_password)
     selenium.screenshot('login')
     #password.send_keys(Keys.RETURN)
+    selenium.find_by(By.XPATH, "//button[contains(.,'Login')]").click()
     #selenium.find_by(By.ID, "sign-in-button").click()
     #selenium.find_by(By.ID, "accept-button").click()
     selenium.find_by(By.CLASS_NAME, "publish-button-label")
