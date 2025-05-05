@@ -35,7 +35,7 @@ def test_login(selenium, device_user, device_password):
     selenium.open_app()
     #selenium.find_by(By.XPATH, "//button[contains(., 'Log in with Syncloud')]").click()
     #selenium.find_by(By.XPATH, "//a[contains(.,'My Syncloud')]").click()
-    selenium.find_by(By.NAME, "email").send_keys(device_user)
+    selenium.find_by(By.NAME, "username").send_keys(device_user)
     password = selenium.find_by(By.ID, "password")
     password.send_keys(device_password)
     selenium.screenshot('login')
