@@ -19,7 +19,7 @@ def module_setup(request, device, artifact_dir, ui_mode, data_dir, app, domain, 
 
         def module_teardown():
             device.run_ssh('journalctl > {0}/journalctl.log'.format(TMP_DIR), throw=False)
-            device.run_ssh('snap run invoiceninja.sql invoiceninja -e "select * from users;" {0}/users.log'.format(TMP_DIR), throw=False)
+            device.run_ssh('snap run invoiceninja.sql invoiceninja -e "select * from users;" > {0}/users.log'.format(TMP_DIR), throw=False)
             device.run_ssh('cp -r {0}/log/*.log {1}'.format(data_dir, TMP_DIR), throw=False)
             device.scp_from_device('{0}/*'.format(TMP_DIR), join(artifact_dir, ui_mode))
             check_output('cp /videos/* {0}'.format(artifact_dir), shell=True)
