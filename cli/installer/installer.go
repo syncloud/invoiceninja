@@ -111,6 +111,10 @@ func (i *Installer) Configure() error {
 	if err != nil {
 		return err
 	}
+	_, err := i.executor.Run(i.artisanPath, "db:seed", "--force")
+	if err != nil {
+		return err
+	}
 
 	return i.UpdateVersion()
 }
