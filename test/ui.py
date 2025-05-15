@@ -48,4 +48,5 @@ def test_login_new(selenium, device_user, device_password):
     selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//input/..").click()
     selenium.find_by(By.XPATH, "//div[.='Albanian']").click()
     selenium.find_by(By.XPATH, "//button[.='Save']").click()
+    selenium.invisible_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
     selenium.screenshot('main')
