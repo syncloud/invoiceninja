@@ -32,7 +32,7 @@ def test_start(module_setup, app, domain, device_host):
     add_host_alias(app, device_host, domain)
 
 
-def test_login(selenium, device_user, device_password):
+def test_login_new(selenium, device_user, device_password):
     selenium.open_app()
     #selenium.find_by(By.XPATH, "//button[contains(., 'Log in with Syncloud')]").click()
     #selenium.find_by(By.XPATH, "//a[contains(.,'My Syncloud')]").click()
@@ -43,9 +43,9 @@ def test_login(selenium, device_user, device_password):
     #password.send_keys(Keys.RETURN)
     selenium.find_by(By.XPATH, "//button[contains(.,'Login')]").click()
     selenium.find_by(By.XPATH, "//label[contains(.,'Company Name')]/..//input").send_keys("Test Company")
-    selenium.find_by(By.XPATH, "//label[contains(.,'Currency')]/..//div[text()='Select...']/..//input/..").click()
+    selenium.find_by(By.XPATH, "//label[contains(.,'Currency')]/..//input/..").click()
     selenium.find_by(By.XPATH, "//div[.='Bermudian Dollar (BMD)']").click()
-    selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//div[text()='English']/..//input/..").click()
-    selenium.find_by(By.XPATH, "//div[.='English']").click()
+    selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//input/..").click()
+    selenium.find_by(By.XPATH, "//div[.='Albanian']").click()
     selenium.find_by(By.XPATH, "//button[.='Save']").click()
     selenium.screenshot('main')

@@ -115,6 +115,10 @@ func (i *Installer) Configure() error {
 	if err != nil {
 		return err
 	}
+	_, err = i.executor.Run(i.artisanPath, "cache:clear")
+	if err != nil {
+		return err
+	}
 
 	return i.UpdateVersion()
 }

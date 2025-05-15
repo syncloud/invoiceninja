@@ -27,17 +27,18 @@ apt-get install -y \
 		libtiff5-dev \
 		libwebp-dev \
 		libmemcached-dev \
- libmcrypt-dev \
+    libmcrypt-dev \
 		zip \
 		wget \
 		unzip \
- libgmp-dev \
- libonig-dev \
- libicu-dev \
- libmagickwand-dev \
- libbz2-dev \
- git \
-  --no-install-recommends
+    libgmp-dev \
+    libonig-dev \
+    libicu-dev \
+    libmagickwand-dev \
+    libbz2-dev \
+    git \
+    chromium \
+    --no-install-recommends
 
 mkdir -p /usr/src/php/ext/memcached
 cd /usr/src/php/ext/memcached
