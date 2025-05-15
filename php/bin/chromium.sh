@@ -5,4 +5,4 @@ LIBS=$LIBS:$(echo ${DIR}/usr/lib/*-linux-gnu*)
 LIBS=$LIBS:$(echo ${DIR}/usr/lib)
 exec ${DIR}/lib/*-linux*/ld-*.so \
   --library-path $LIBS \
-  ${DIR}/usr/bin/google-chrome-stable "$@"
+  ${DIR}/usr/lib/chromium/chromium "$@"
