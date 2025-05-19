@@ -29,6 +29,29 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
+               name: "chromium",
+               image: "mcr.microsoft.com/playwright:v1.49.1",
+               commands: [
+                   "./chromium/build.sh"
+               ]
+             },
+           },
+           {
+             name: 'chromium test',
+             image: 'syncloud/platform-buster-' + arch + ':' + platform,
+             commands: [
+               './chromium/test.sh',
+             ],
+           },
+           ,
+           {
+             name: 'chromium pdf',
+             image: 'debian:bullseye-slim',
+             commands: [
+               './chromium/test-pdf.sh',
+             ],
+           },
+           {
                name: "php",
                image: "php:" + php,
                commands: [

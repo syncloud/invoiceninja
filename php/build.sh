@@ -37,7 +37,6 @@ apt-get install -y \
     libmagickwand-dev \
     libbz2-dev \
     git \
-    chromium \
     --no-install-recommends
 
 mkdir -p /usr/src/php/ext/memcached
