@@ -4,7 +4,7 @@ DIR=$( cd "$( dirname "$0" )" && pwd )
 cd ${DIR}
 
 apt update
-apt install poppler-utils
+apt install -y poppler-utils
 #sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xml
 pdftotext test.pdf test.txt
 
