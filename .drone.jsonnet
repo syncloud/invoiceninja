@@ -34,7 +34,6 @@ local build(arch, test_ui, dind) = [{
                commands: [
                    "./chromium/build.sh"
                ]
-             },
            },
            {
              name: 'chromium test',
