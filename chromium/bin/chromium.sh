@@ -8,10 +8,7 @@ LIBS=$LIBS_DIR:$(echo ${DIR}/usr/lib/*-linux-gnu*)
 LIBS=$LIBS:$(echo ${DIR}/usr/lib)
 LIBS=$LIBS:$(echo ${DIR}/usr/lib/*-linux-gnu*/pulseaudio)
 
-logger "${LIBS_DIR}/ld-*.so* \
-  --library-path $LIBS \
-  ${LIBS_DIR}/chrome $@ --single-process --headless=old"
-
+logger -t invoiceninja "$0 $*"
 
 exec ${LIBS_DIR}/ld-*.so* \
   --library-path $LIBS \
