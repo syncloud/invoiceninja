@@ -42,11 +42,11 @@ def test_login_new(selenium, device_user, device_password):
 
 def test_new_company(selenium):
     selenium.find_by(By.XPATH, "//label[contains(.,'Company Name')]/..//input").send_keys("Test Company")
-    selenium.find_by(By.XPATH, "//label[contains(.,'Currency')]/..//input/..").click()
-    selenium.find_by(By.XPATH, "//div[.='Bermudian Dollar (BMD)']").click()
-    selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//input/..").click()
+    selenium.find_by(By.XPATH, "//label[contains(.,'Currency')]/..//input/..").send_keys("usd")
+    selenium.find_by(By.XPATH, "//div[.='US Dollar (USD)']").click()
+    selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//input/..").send_keys("Eng")
     selenium.screenshot('company-language')
-    selenium.find_by(By.XPATH, "//div[.='Albanian']").click()
+    selenium.find_by(By.XPATH, "//div[.='English']").click()
     selenium.screenshot('company')
     selenium.find_by(By.XPATH, "//button[.='Save']").click()
     selenium.invisible_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
