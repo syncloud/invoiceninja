@@ -61,10 +61,9 @@ def test_new_company(selenium):
     selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//input/..").click()
     selenium.screenshot('new-company-language')
     selenium.find_by(By.XPATH, "//div[.='Albanian']").click()
-    selenium.screenshot('new-company')
     selenium.find_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
     selenium.screenshot('new-company')
-    selenium.find_by(By.XPATH, "//button[.='Save']").click()
+    selenium.find_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']/../../..//button[.='Save']").click()
     selenium.invisible_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
     selenium.screenshot('new-company-saved')
 
