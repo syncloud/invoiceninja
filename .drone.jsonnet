@@ -1,6 +1,8 @@
 local name = 'invoiceninja';
 local version = '5.11';
-local php = "8.3.9-fpm-bullseye";
+local ui_version = '23.05.2025.1';
+local node = '20.9.0';
+local php = '8.3.9-fpm-bullseye';
 local nginx = '1.24.0';
 local redis = '7.0.15';
 local mariadb = '10.5.16-alpine';
@@ -12,7 +14,8 @@ local python = '3.9-slim-buster';
 local distro_default = 'buster';
 local distros = ['bookworm', 'buster'];
 
-local build(arch, test_ui, dind) = [{
+local build(arch, test_ui, dind) = [
+{
   kind: 'pipeline',
   type: 'docker',
   name: arch,
@@ -29,11 +32,11 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
-               name: "chromium",
-               image: "mcr.microsoft.com/playwright:v1.49.1",
-               commands: [
-                   "./chromium/build.sh"
-               ]
+             name: 'chromium',
+             image: 'mcr.microsoft.com/playwright:v1.49.1',
+             commands: [
+               './chromium/build.sh',
+             ],
            },
            {
              name: 'chromium test',
@@ -50,12 +53,12 @@ local build(arch, test_ui, dind) = [{
              ],
            },
            {
-               name: "php",
-               image: "php:" + php,
-               commands: [
-                   "./php/build.sh",
-                   './php/build-server.sh ' + version
-               ],
+             name: 'php',
+             image: 'php:' + php,
+             commands: [
+               './php/build.sh',
+               './php/build-server.sh ' + version,
+             ],
              environment: {
                GITHUB_TOKEN: {
                  from_secret: 'GITHUB_TOKEN',
@@ -67,7 +70,7 @@ local build(arch, test_ui, dind) = [{
              image: 'syncloud/platform-buster-' + arch + ':' + platform,
              commands: [
                './php/test.sh',
-               './php/test-server.sh'
+               './php/test-server.sh',
              ],
            },
            {
@@ -114,9 +117,9 @@ local build(arch, test_ui, dind) = [{
            },
            {
              name: 'web',
-             image: 'node:20.9.0',
+             image: 'node:' + node,
              commands: [
-               './web/build.sh ' + version,
+               './web/build.sh ' + ui_version,
              ],
            },
            {
@@ -131,8 +134,6 @@ local build(arch, test_ui, dind) = [{
                "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/bin/cli ./cmd/cli",
              ],
            },
-
-
            {
              name: 'package',
              image: 'debian:buster-slim',
@@ -153,62 +154,64 @@ local build(arch, test_ui, dind) = [{
              ],
            }
            for distro in distros
-         ] + (if test_ui then ([
-                                 {
-                                   name: 'selenium',
-                                   image: 'selenium/standalone-' + browser + ':' + selenium,
-                                   detach: true,
-                                   environment: {
-                                     SE_NODE_SESSION_TIMEOUT: '999999',
-                                     START_XVFB: 'true',
-                                   },
-                                   volumes: [{
-                                     name: 'shm',
-                                     path: '/dev/shm',
-                                   }],
-                                   commands: [
-                                     'cat /etc/hosts',
-                                     'DOMAIN="' + distro_default + '.com"',
-                                     'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
-                                     'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | sudo tee -a /etc/hosts',
-                                     'cat /etc/hosts',
-                                     '/opt/bin/entry_point.sh',
-                                   ],
-                                 },
+         ] + (if test_ui then (
+                [
+                  {
+                    name: 'selenium',
+                    image: 'selenium/standalone-' + browser + ':' + selenium,
+                    detach: true,
+                    environment: {
+                      SE_NODE_SESSION_TIMEOUT: '999999',
+                      START_XVFB: 'true',
+                    },
+                    volumes: [{
+                      name: 'shm',
+                      path: '/dev/shm',
+                    }],
+                    commands: [
+                      'cat /etc/hosts',
+                      'DOMAIN="' + distro_default + '.com"',
+                      'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
+                      'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | sudo tee -a /etc/hosts',
+                      'cat /etc/hosts',
+                      '/opt/bin/entry_point.sh',
+                    ],
+                  },
 
-                                 {
-                                   name: 'selenium-video',
-                                   image: 'selenium/video:ffmpeg-6.1.1-20240621',
-                                   detach: true,
-                                   environment: {
-                                     DISPLAY_CONTAINER_NAME: 'selenium',
-                                     FILE_NAME: 'video.mkv',
-                                   },
-                                   volumes: [
-                                     {
-                                       name: 'shm',
-                                       path: '/dev/shm',
-                                     },
-                                     {
-                                       name: 'videos',
-                                       path: '/videos',
-                                     },
-                                   ],
-                                 },
-                                 {
-                                   name: 'test-ui',
-                                   image: 'python:' + python,
-                                   commands: [
-                                     'cd test',
-                                     './deps.sh',
-                                     'py.test -x -s ui.py --distro=buster --ui-mode=desktop --domain=' + distro_default + '.com --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --browser-height=2000 --browser=' + browser,
-                                   ],
-                                   volumes: [{
-                                     name: 'videos',
-                                     path: '/videos',
-                                   }],
-                                 },
-                               ])
+                  {
+                    name: 'selenium-video',
+                    image: 'selenium/video:ffmpeg-6.1.1-20240621',
+                    detach: true,
+                    environment: {
+                      DISPLAY_CONTAINER_NAME: 'selenium',
+                      FILE_NAME: 'video.mkv',
+                    },
+                    volumes: [
+                      {
+                        name: 'shm',
+                        path: '/dev/shm',
+                      },
+                      {
+                        name: 'videos',
+                        path: '/videos',
+                      },
+                    ],
+                  },
+                  {
+                    name: 'test-ui',
+                    image: 'python:' + python,
+                    commands: [
+                      'cd test',
+                      './deps.sh',
+                      'py.test -x -s ui.py --distro=buster --ui-mode=desktop --domain=' + distro_default + '.com --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --browser-height=2000 --browser=' + browser,
+                    ],
+                    volumes: [{
+                      name: 'videos',
+                      path: '/videos',
+                    }],
+                  },
+                ]
+              )
               else []) +
          (if arch == 'amd64' then [
             {

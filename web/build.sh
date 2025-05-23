@@ -7,16 +7,17 @@ BUILD_DIR=${DIR}/../build
 SERVER_DIR=${BUILD_DIR}/snap/server
 
 cd ${BUILD_DIR}
-wget --progress=dot:giga https://github.com/cyberb/invoiceninja-ui/archive/refs/heads/main.tar.gz
-tar xf main.tar.gz
-mv invoiceninja-ui-main web
+#wget --progress=dot:giga https://github.com/cyberb/invoiceninja-ui/archive/refs/heads/main.tar.gz
+wget --progress=dot:giga https://github.com/invoiceninja/ui/archive/refs/tags/$VERSION.tar.gz
+tar xf $VERSION.tar.gz
+mv invoiceninja-ui-$VERSION web
 
 cd ${BUILD_DIR}/web
 cp .env.example .env
 sed -i 's/VITE_IS_HOSTED=.*/VITE_IS_HOSTED=false/g' .env
 sed -i 's/VITE_IS_TEST=.*/VITE_IS_TEST=false/' .env
 cp ${SERVER_DIR}/vite.config.ts.react vite.config.js
-sed -i '/"version"/c\  "version": " Latest Build - '`date +%Y.%m.%d`'",' package.json
+sed -i '/"version"/c\  "version": " $VERSION - '`date +%Y.%m.%d`'",' package.json
 
 npm config set fetch-retry-mintimeout 200000
 npm config set fetch-retry-maxtimeout 1200000
@@ -41,4 +42,3 @@ echo $?
 
 npm run production
 rm -rf node_modules
-#mv public/index.html public/index.php
