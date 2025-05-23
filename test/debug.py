@@ -5,7 +5,8 @@ from os.path import dirname, join
 from selenium import webdriver
 from syncloudlib.integration.selenium_wrapper import SeleniumWrapper
 
-from test.ui import test_login_new, test_new_client, test_new_product, test_new_invoice, test_payments
+from test.ui import test_login_new, test_new_client, test_new_product, test_new_invoice, test_payments, \
+    test_new_company, test_settings
 
 DIR = dirname(__file__)
 
@@ -36,6 +37,8 @@ def test_chrome():
 
     try:
         test_login_new(selenium, "test", "test1234")
+        test_settings(selenium)
+        test_new_company(selenium)
         test_new_client(selenium)
         test_new_product(selenium)
         test_payments(selenium)

@@ -1,5 +1,7 @@
 import pytest
 from os.path import dirname, join
+
+from retry import retry
 from selenium.webdriver.common.by import By
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
@@ -40,17 +42,31 @@ def test_login_new(selenium, device_user, device_password):
     selenium.find_by(By.XPATH, "//button[contains(.,'Login')]").click()
     selenium.screenshot('login')
 
-def test_new_company(selenium):
+def test_default_company(selenium):
     selenium.find_by(By.XPATH, "//label[contains(.,'Company Name')]/..//input").send_keys("Test Company")
-    selenium.find_by(By.XPATH, "//label[contains(.,'Currency')]/..//input/..").send_keys("usd")
-    selenium.find_by(By.XPATH, "//div[.='US Dollar (USD)']").click()
-    selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//input/..").send_keys("Eng")
+    selenium.find_by(By.XPATH, "//label[contains(.,'Currency')]/..//input/..").click()
+    selenium.find_by(By.XPATH, "//div[.='Bermudian Dollar (BMD)']").click()
+    selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//input/..").click()
     selenium.screenshot('company-language')
-    selenium.find_by(By.XPATH, "//div[.='English']").click()
+    selenium.find_by(By.XPATH, "//div[.='Albanian']").click()
     selenium.screenshot('company')
     selenium.find_by(By.XPATH, "//button[.='Save']").click()
     selenium.invisible_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
     selenium.screenshot('main')
+
+def test_settings(selenium):
+    selenium.click_by(By.XPATH, "//span[.='Settings']")
+    selenium.find_by(By.XPATH, "//span[.='Basic Settings']")
+
+def test_new_company(selenium):
+    selenium.click_by(By.XPATH, "//img[@alt='Company logo']")
+    selenium.find_by(By.XPATH, "//span[.='Add Company']").click()
+    selenium.find_by(By.XPATH, "//span[.='Yes']").click()
+    selenium.find_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
+    selenium.screenshot('new-company')
+    selenium.find_by(By.XPATH, "//button[.='Save']").click()
+    selenium.invisible_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
+    selenium.screenshot('new-company-saved')
 
 def test_new_client(selenium):
     selenium.click_by(By.XPATH, "//a[@href='/clients/create']")
@@ -75,10 +91,13 @@ def test_payments(selenium):
 def test_new_invoice(selenium):
     selenium.click_by(By.XPATH, "//a[@href='/invoices/create']")
     selenium.click_by(By.XPATH, "//button[.='New Client']/..//span[.='Client']")
-    selenium.find_by(By.XPATH, "//input[@id='number']").send_keys("123456789")
+    selenium.find_by(By.XPATH, "//input[@id='number']").send_keys("1234567891")
     selenium.find_by(By.XPATH, "//span[.='Add Item']").click()
     selenium.find_by(By.XPATH, "//span[contains(.,'Item')]/../../../../..//input").click()
     selenium.find_by(By.XPATH, "//p[.='Product']").click()
+    selenium.find_by(By.XPATH, "//button[.='Save']").click()
+    selenium.find_by(By.XPATH, "//div[contains(.,'Processing') and @role='status']")
+    selenium.invisible_by(By.XPATH, "//div[contains(.,'Processing') and @role='status']")
     selenium.find_by(By.XPATH, "//button[.='Save']").click()
     selenium.find_by(By.XPATH, "//h2[.='Edit Invoice']")
     selenium.screenshot('invoice')
