@@ -76,7 +76,7 @@ def test_payments(selenium):
 def test_new_invoice(selenium):
     selenium.click_by(By.XPATH, "//a[@href='/invoices/create']")
     selenium.click_by(By.XPATH, "//button[.='New Client']/..//span[.='Client']")
-    selenium.find_by(By.XPATH, "//input[@id='number']").send_keys("1234567891")
+    #selenium.find_by(By.XPATH, "//input[@id='number']").send_keys("1234567891")
     selenium.find_by(By.XPATH, "//span[.='Add Item']").click()
     selenium.find_by(By.XPATH, "//span[contains(.,'Item')]/../../../../..//input").click()
     selenium.find_by(By.XPATH, "//p[.='Product']").click()
