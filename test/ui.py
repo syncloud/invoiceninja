@@ -52,20 +52,6 @@ def test_settings(selenium):
     selenium.click_by(By.XPATH, "//span[.='Settings']")
     selenium.find_by(By.XPATH, "//span[.='Basic Settings']")
 
-def test_new_company(selenium):
-    selenium.click_by(By.XPATH, "//img[@alt='Company logo']")
-    selenium.find_by(By.XPATH, "//span[.='Add Company']").click()
-    selenium.find_by(By.XPATH, "//span[.='Yes']").click()
-    selenium.find_by(By.XPATH, "//label[contains(.,'Currency')]/..//input/..").click()
-    selenium.find_by(By.XPATH, "//div[.='Bermudian Dollar (BMD)']").click()
-    selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//input/..").click()
-    selenium.screenshot('new-company-language')
-    selenium.find_by(By.XPATH, "//div[.='Albanian']").click()
-    selenium.find_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
-    selenium.screenshot('new-company')
-    selenium.find_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']/../../..//button[.='Save']").click()
-    selenium.invisible_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
-    selenium.screenshot('new-company-saved')
 
 def test_new_client(selenium):
     selenium.click_by(By.XPATH, "//a[@href='/clients/create']")
@@ -100,3 +86,19 @@ def test_new_invoice(selenium):
     selenium.find_by(By.XPATH, "//button[.='Save']").click()
     selenium.find_by(By.XPATH, "//h2[.='Edit Invoice']")
     selenium.screenshot('invoice')
+
+
+def test_new_company(selenium):
+    selenium.click_by(By.XPATH, "//img[@alt='Company logo']")
+    selenium.find_by(By.XPATH, "//span[.='Add Company']").click()
+    selenium.find_by(By.XPATH, "//span[.='Yes']").click()
+    selenium.find_by(By.XPATH, "//label[contains(.,'Currency')]/..//input/..").click()
+    selenium.find_by(By.XPATH, "//div[.='Bermudian Dollar (BMD)']").click()
+    selenium.find_by(By.XPATH, "//label[contains(.,'Language')]/..//input/..").click()
+    selenium.screenshot('new-company-language')
+    selenium.find_by(By.XPATH, "//div[.='Albanian']").click()
+    selenium.find_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
+    selenium.screenshot('new-company')
+    selenium.find_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']/../../..//button[.='Save']").click()
+    selenium.invisible_by(By.XPATH, "//h3[.='Welcome to Invoice Ninja']")
+    selenium.screenshot('new-company-saved')
