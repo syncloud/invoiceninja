@@ -17,6 +17,7 @@ cd ${BUILD_DIR}/web
 sed -i 's/email_address/username/g' src/pages/authentication/Login.tsx
 sed -i 's/email/username/g' src/pages/authentication/Login.tsx
 sed -i '0,/email/s//username/g' src/pages/authentication/common/ValidationInterface.tsx
+sed -i 's/name="secret"/name="secret" visible="false"/g' src/pages/authentication/Login.tsx
 
 cp .env.example .env
 sed -i 's/VITE_IS_HOSTED=.*/VITE_IS_HOSTED=false/g' .env
