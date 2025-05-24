@@ -10,7 +10,7 @@ cd ${BUILD_DIR}
 #wget --progress=dot:giga https://github.com/cyberb/invoiceninja-ui/archive/refs/heads/main.tar.gz
 wget --progress=dot:giga https://github.com/invoiceninja/ui/archive/refs/tags/$VERSION.tar.gz
 tar xf $VERSION.tar.gz
-mv invoiceninja-ui-$VERSION web
+mv ui-$VERSION web
 
 cd ${BUILD_DIR}/web
 cp .env.example .env
