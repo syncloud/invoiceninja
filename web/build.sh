@@ -7,17 +7,18 @@ BUILD_DIR=${DIR}/../build
 SERVER_DIR=${BUILD_DIR}/snap/server
 
 cd ${BUILD_DIR}
-#wget --progress=dot:giga https://github.com/cyberb/invoiceninja-ui/archive/refs/heads/main.tar.gz
-wget --progress=dot:giga https://github.com/invoiceninja/ui/archive/refs/tags/$VERSION.tar.gz
-tar xf $VERSION.tar.gz
-mv ui-$VERSION web
+
+if [[ "$VERSION" == "fork" ]];
+  wget --progress=dot:giga https://github.com/cyberb/invoiceninja-ui/archive/refs/heads/main.tar.gz
+  tar xf main.tar.gz
+  mv invoiceninja-ui-main web
+else
+  wget --progress=dot:giga https://github.com/invoiceninja/ui/archive/refs/tags/$VERSION.tar.gz
+  tar xf $VERSION.tar.gz
+  mv ui-$VERSION web
+fi
 
 cd ${BUILD_DIR}/web
-
-sed -i 's/email_address/username/g' src/pages/authentication/Login.tsx
-sed -i 's/email/username/g' src/pages/authentication/Login.tsx
-sed -i '0,/email/s//username/g' src/pages/authentication/common/ValidationInterface.tsx
-sed -i 's/name="secret"/name="secret" visible="false"/g' src/pages/authentication/Login.tsx
 
 cp .env.example .env
 sed -i 's/VITE_IS_HOSTED=.*/VITE_IS_HOSTED=false/g' .env
