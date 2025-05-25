@@ -9,6 +9,7 @@ SERVER_DIR=${BUILD_DIR}/snap/server
 cd ${BUILD_DIR}
 
 if [[ "$VERSION" == "fork" ]];
+then
   wget --progress=dot:giga https://github.com/cyberb/invoiceninja-ui/archive/refs/heads/main.tar.gz
   tar xf main.tar.gz
   mv invoiceninja-ui-main web
