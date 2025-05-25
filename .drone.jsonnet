@@ -1,6 +1,6 @@
 local name = 'invoiceninja';
 local version = '5.11';
-;local ui_version = '23.05.2025.1';
+#local ui_version = '23.05.2025.1';
 local ui_version = 'fork';
 local node = '20.9.0';
 local php = '8.3.9-fpm-bullseye';
