@@ -12,7 +12,7 @@ max_attempts=10
 timeout=5
 
 while [ $attempts -lt $max_attempts ]; do
-    if timeout $timeout $DIR/pdf.sh; then
+    if timeout --kill-after=1 $timeout $DIR/pdf.sh; then
         exit 0
     fi
     attempts=$((attempts + 1))
