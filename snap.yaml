@@ -69,7 +69,7 @@ apps:
     command: bin/cli
 
   sql:
-    command: bin/sql.sh
+    command: bin/mysql
 
   storage-change:
     command: bin/cli storage-change

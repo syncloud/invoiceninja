@@ -75,13 +75,13 @@ func (d *Database) Init() error {
 }
 
 func (d *Database) Execute(sql string) error {
-	_, err := d.executor.Run(fmt.Sprintf("%s/bin/sql.sh", d.appDir), "--execute", sql)
+	_, err := d.executor.Run(fmt.Sprintf("%s/bin/mysql", d.appDir), "--execute", sql)
 	return err
 }
 
 func (d *Database) ExecuteDb(db string, sql string) error {
 	_, err := d.executor.Run(
-		fmt.Sprintf("%s/bin/sql.sh", d.appDir),
+		fmt.Sprintf("%s/bin/mysql", d.appDir),
 		"--database", db,
 		"--execute", sql,
 	)

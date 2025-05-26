@@ -15,13 +15,17 @@ import (
 const App = "invoiceninja"
 
 type Variables struct {
-	App       string
-	AppDir    string
-	DataDir   string
-	CommonDir string
-	AppKey    string
-	AppUrl    string
-	Domain    string
+	App              string
+	AppDir           string
+	DataDir          string
+	CommonDir        string
+	AppKey           string
+	AppUrl           string
+	Domain           string
+	AuthUrl          string
+	AuthClientId     string
+	AuthClientSecret string
+	AuthRedirectUri  string
 }
 
 type Installer struct {
@@ -34,6 +38,7 @@ type Installer struct {
 	appDir             string
 	dataDir            string
 	commonDir          string
+	artisanPath        string
 	executor           *Executor
 	logger             *zap.Logger
 }
@@ -44,6 +49,7 @@ func New(logger *zap.Logger) *Installer {
 	commonDir := fmt.Sprintf("/var/snap/%s/common", App)
 	configDir := path.Join(dataDir, "config")
 	executor := NewExecutor(logger)
+	artisanPath := path.Join(appDir, "/bin/artisan.sh")
 	return &Installer{
 		newVersionFile:     path.Join(appDir, "version"),
 		currentVersionFile: path.Join(dataDir, "version"),
@@ -55,6 +61,7 @@ func New(logger *zap.Logger) *Installer {
 		dataDir:            dataDir,
 		commonDir:          commonDir,
 		executor:           executor,
+		artisanPath:        artisanPath,
 		logger:             logger,
 	}
 }
@@ -98,6 +105,19 @@ func (i *Installer) Configure() error {
 		if err != nil {
 			return err
 		}
+	}
+
+	_, err := i.executor.Run(i.artisanPath, "migrate", "--force")
+	if err != nil {
+		return err
+	}
+	_, err = i.executor.Run(i.artisanPath, "db:seed", "--force")
+	if err != nil {
+		return err
+	}
+	_, err = i.executor.Run(i.artisanPath, "cache:clear")
+	if err != nil {
+		return err
 	}
 
 	return i.UpdateVersion()
@@ -224,15 +244,28 @@ func (i *Installer) UpdateConfigs() error {
 	if err != nil {
 		return err
 	}
+	authUrl, err := i.platformClient.GetAppUrl("auth")
+	if err != nil {
+		return err
+	}
+	redirectUri := "/auth/authelia"
+	password, err := i.platformClient.RegisterOIDCClient(App, redirectUri, false, "client_secret_post")
+	if err != nil {
+		return err
+	}
 
 	variables := Variables{
-		App:       App,
-		AppDir:    i.appDir,
-		DataDir:   i.dataDir,
-		CommonDir: i.commonDir,
-		AppKey:    appKey,
-		AppUrl:    appUrl,
-		Domain:    domain,
+		App:              App,
+		AppDir:           i.appDir,
+		DataDir:          i.dataDir,
+		CommonDir:        i.commonDir,
+		AppKey:           appKey,
+		AppUrl:           appUrl,
+		Domain:           domain,
+		AuthUrl:          authUrl,
+		AuthClientId:     App,
+		AuthClientSecret: password,
+		AuthRedirectUri:  redirectUri,
 	}
 
 	err = config.Generate(
@@ -279,12 +312,7 @@ func (i *Installer) getOrCreateAppKey() (string, error) {
 	file := path.Join(i.dataDir, ".app_key")
 	_, err := os.Stat(file)
 	if os.IsNotExist(err) {
-		secret, err := i.executor.Run(
-			path.Join(i.appDir, App, "/bin/php.sh"),
-			path.Join(i.appDir, App, "/var/www/app/artisan"),
-			"key:generate",
-			"--show",
-		)
+		secret, err := i.executor.Run(i.artisanPath, "key:generate", "--show")
 		if err != nil {
 			return "", err
 		}
