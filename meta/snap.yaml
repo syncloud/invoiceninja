@@ -87,7 +87,7 @@ apps:
     command: bin/cli restore-post-start
 
 confinement: strict
-description: invoiceninja
+description: Invoice, quote, project and time-tracking
 grade: stable
 name: invoiceninja
-summary: invoiceninja
+summary: Invoice Ninja
