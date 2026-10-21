@@ -48,7 +48,7 @@ local build(arch, test_ui, dind) = [
            },
            {
              name: 'chromium pdf',
-             image: 'debian:bullseye-slim',
+             image: 'debian:bookworm-slim',
              commands: [
                './chromium/test-pdf.sh',
              ],
