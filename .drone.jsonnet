@@ -11,7 +11,7 @@ local browser = 'chrome';
 local platform = '25.02';
 local selenium = '4.21.0-20240517';
 local store_publisher = 'stable-346';
-local python = '3.9-slim-buster';
+local python = '3.12-slim-bookworm';
 local distro_default = 'buster';
 local distros = ['bookworm', 'buster'];
 
@@ -137,7 +137,7 @@ local build(arch, test_ui, dind) = [
            },
            {
              name: 'package',
-             image: 'debian:buster-slim',
+             image: 'debian:bookworm-slim',
              commands: [
                'VERSION=$(cat version)',
                './package.sh ' + name + ' $VERSION ',
