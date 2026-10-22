@@ -14,7 +14,7 @@ local python = '3.12-slim-bookworm';
 local distro_default = 'bookworm';
 local distros = ['bookworm', 'buster'];
 
-local build(arch, test_ui, dind) = [
+local build(arch, test_ui) = [
 {
   kind: 'pipeline',
   type: 'docker',
@@ -24,13 +24,6 @@ local build(arch, test_ui, dind) = [
     arch: arch,
   },
   steps: [
-           {
-             name: 'version',
-             image: 'debian:buster-slim',
-             commands: [
-               'echo $DRONE_BUILD_NUMBER > version',
-             ],
-           },
            {
              name: 'chromium',
              image: 'mcr.microsoft.com/playwright:v1.49.1',
@@ -126,20 +119,14 @@ local build(arch, test_ui, dind) = [
              name: 'cli',
              image: 'golang:1.20',
              commands: [
-               'cd cli',
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/install ./cmd/install",
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/configure ./cmd/configure",
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh",
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh",
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/bin/cli ./cmd/cli",
+               './cli/build.sh',
              ],
            },
            {
              name: 'package',
              image: 'debian:bookworm-slim',
              commands: [
-               'VERSION=$(cat version)',
-               './package.sh ' + name + ' $VERSION ',
+               './package.sh ' + name + ' $DRONE_BUILD_NUMBER',
              ],
            },
          ] + [
@@ -147,10 +134,7 @@ local build(arch, test_ui, dind) = [
              name: 'test ' + distro,
              image: 'python:' + python,
              commands: [
-               'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-               'cd test',
-               './deps.sh',
-               'py.test -x -s test.py --distro=' + distro + ' --domain=' + distro + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro + '.com --app=' + name + ' --arch=' + arch,
+               './ci/test.sh test.py ' + distro + ' ' + name + ' ' + arch,
              ],
            }
            for distro in distros
@@ -166,9 +150,7 @@ local build(arch, test_ui, dind) = [
                   name: 'test-upgrade-prev',
                   image: 'python:' + python,
                   commands: [
-                    'cd test',
-                    './deps.sh',
-                    'py.test -x -s upgrade_prev.py --distro=' + distro_default + ' --domain=' + distro_default + '.com --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --arch=' + arch,
+                    './ci/test.sh upgrade_prev.py ' + distro_default + ' ' + name + ' ' + arch,
                   ],
                 },
                 {
@@ -182,10 +164,7 @@ local build(arch, test_ui, dind) = [
                   name: 'test-upgrade',
                   image: 'python:' + python,
                   commands: [
-                    'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-                    'cd test',
-                    './deps.sh',
-                    'py.test -x -s upgrade.py --distro=' + distro_default + ' --domain=' + distro_default + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --arch=' + arch,
+                    './ci/test.sh upgrade.py ' + distro_default + ' ' + name + ' ' + arch,
                   ],
                   privileged: true,
                 },
@@ -239,18 +218,6 @@ local build(arch, test_ui, dind) = [
   },
   services: [
     {
-      name: 'docker',
-      image: 'docker:' + dind,
-      privileged: true,
-      volumes: [
-        {
-          name: 'dockersock',
-          path: '/var/run',
-        },
-      ],
-    },
-  ] + [
-    {
       name: name + '.' + distro + '.com',
       image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
       privileged: true,
@@ -280,12 +247,8 @@ local build(arch, test_ui, dind) = [
         path: '/dev',
       },
     },
-    {
-      name: 'dockersock',
-      temp: {},
-    },
   ],
 }];
 
-build('amd64', true, '20.10.21-dind') +
-build('arm64', false, '20.10.21-dind')
+build('amd64', true) +
+build('arm64', false)
