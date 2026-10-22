@@ -7,12 +7,11 @@ local php = '8.3.36-fpm-bookworm';
 local nginx = '1.24.0';
 local redis = '7.0.15';
 local mariadb = '10.5.16-alpine';
-local browser = 'chrome';
 local platform = '26.04.10';
-local selenium = '4.21.0-20240517';
+local playwright = 'mcr.microsoft.com/playwright:v1.59.1-jammy';
 local store_publisher = 'stable-346';
 local python = '3.12-slim-bookworm';
-local distro_default = 'buster';
+local distro_default = 'bookworm';
 local distros = ['bookworm', 'buster'];
 
 local build(arch, test_ui, dind) = [
@@ -155,82 +154,49 @@ local build(arch, test_ui, dind) = [
              ],
            }
            for distro in distros
-         ] + (if test_ui then (
-                [
-                  {
-                    name: 'selenium',
-                    image: 'selenium/standalone-' + browser + ':' + selenium,
-                    detach: true,
-                    environment: {
-                      SE_NODE_SESSION_TIMEOUT: '999999',
-                      START_XVFB: 'true',
-                    },
-                    volumes: [{
-                      name: 'shm',
-                      path: '/dev/shm',
-                    }],
-                    commands: [
-                      'cat /etc/hosts',
-                      'DOMAIN="' + distro_default + '.com"',
-                      'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
-                      'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | sudo tee -a /etc/hosts',
-                      'cat /etc/hosts',
-                      '/opt/bin/entry_point.sh',
-                    ],
-                  },
-
-                  {
-                    name: 'selenium-video',
-                    image: 'selenium/video:ffmpeg-6.1.1-20240621',
-                    detach: true,
-                    environment: {
-                      DISPLAY_CONTAINER_NAME: 'selenium',
-                      FILE_NAME: 'video.mkv',
-                    },
-                    volumes: [
-                      {
-                        name: 'shm',
-                        path: '/dev/shm',
-                      },
-                      {
-                        name: 'videos',
-                        path: '/videos',
-                      },
-                    ],
-                  },
-                  {
-                    name: 'test-ui',
-                    image: 'python:' + python,
-                    commands: [
-                      'cd test',
-                      './deps.sh',
-                      'py.test -x -s ui.py --distro=buster --ui-mode=desktop --domain=' + distro_default + '.com --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --browser-height=2000 --browser=' + browser,
-                    ],
-                    volumes: [{
-                      name: 'videos',
-                      path: '/videos',
-                    }],
-                  },
-                ]
-              )
-              else []) +
-         (if arch == 'amd64' then [
-            {
-              name: 'test-upgrade',
-              image: 'python:' + python,
-              commands: [
-                'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-                'cd test',
-                './deps.sh',
-                'py.test -x -s upgrade.py --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.buster.com --app=' + name + ' --browser=' + browser,
-              ],
-              privileged: true,
-              volumes: [{
-                name: 'videos',
-                path: '/videos',
-              }],
-            },
-          ] else []) + [
+         ] + (if test_ui then [
+                {
+                  name: 'e2e',
+                  image: playwright,
+                  commands: [
+                    './test/e2e/run.sh specs/01-smoke.spec.ts',
+                  ],
+                },
+                {
+                  name: 'test-upgrade-prev',
+                  image: 'python:' + python,
+                  commands: [
+                    'cd test',
+                    './deps.sh',
+                    'py.test -x -s upgrade_prev.py --distro=' + distro_default + ' --domain=' + distro_default + '.com --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --arch=' + arch,
+                  ],
+                },
+                {
+                  name: 'e2e-before-upgrade',
+                  image: playwright,
+                  commands: [
+                    './test/e2e/run.sh specs/02-pre-upgrade.spec.ts',
+                  ],
+                },
+                {
+                  name: 'test-upgrade',
+                  image: 'python:' + python,
+                  commands: [
+                    'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
+                    'cd test',
+                    './deps.sh',
+                    'py.test -x -s upgrade.py --distro=' + distro_default + ' --domain=' + distro_default + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --arch=' + arch,
+                  ],
+                  privileged: true,
+                },
+                {
+                  name: 'e2e-after-upgrade',
+                  image: playwright,
+                  commands: [
+                    './test/e2e/run.sh specs/03-post-upgrade.spec.ts',
+                  ],
+                },
+              ] else []) + [
     {
       name: 'publish',
       image: 'syncloud/store-publisher:' + store_publisher,
@@ -313,14 +279,6 @@ local build(arch, test_ui, dind) = [
       host: {
         path: '/dev',
       },
-    },
-    {
-      name: 'shm',
-      temp: {},
-    },
-    {
-      name: 'videos',
-      temp: {},
     },
     {
       name: 'dockersock',
