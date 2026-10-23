@@ -49,8 +49,7 @@ local build(arch, test_ui) = [
              name: 'php',
              image: 'php:' + php,
              commands: [
-               './php/build.sh',
-               './php/build-server.sh ' + version,
+               './php/build.sh ' + version,
              ],
              environment: {
                GITHUB_TOKEN: {
@@ -63,7 +62,6 @@ local build(arch, test_ui) = [
              image: 'syncloud/platform-buster-' + arch + ':' + platform,
              commands: [
                './php/test.sh',
-               './php/test-server.sh',
              ],
            },
            {

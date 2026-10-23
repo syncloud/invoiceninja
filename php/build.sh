@@ -99,3 +99,5 @@ cp ${DIR}/bin/* ${BUILD_DIR}/bin
 mkdir -p ${BUILD_DIR}/lib/php/extensions
 mv ${BUILD_DIR}/usr/local/lib/php/extensions/*/*.so ${BUILD_DIR}/lib/php/extensions
 rm -rf ${BUILD_DIR}/usr/src
+
+${DIR}/build-server.sh $1
