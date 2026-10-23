@@ -3,19 +3,18 @@ local version = '5.11';
 #local ui_version = '23.05.2025.1';
 local ui_version = 'fork';
 local node = '22.16.0';
-local php = '8.3.9-fpm-bullseye';
+local php = '8.3.36-fpm-bookworm';
 local nginx = '1.24.0';
 local redis = '7.0.15';
 local mariadb = '10.5.16-alpine';
-local browser = 'chrome';
-local platform = '25.02';
-local selenium = '4.21.0-20240517';
+local platform = '26.04.10';
+local playwright = 'mcr.microsoft.com/playwright:v1.59.1-jammy';
 local store_publisher = 'stable-346';
-local python = '3.9-slim-buster';
-local distro_default = 'buster';
+local python = '3.12-slim-bookworm';
+local distro_default = 'bookworm';
 local distros = ['bookworm', 'buster'];
 
-local build(arch, test_ui, dind) = [
+local build(arch, test_ui) = [
 {
   kind: 'pipeline',
   type: 'docker',
@@ -25,13 +24,6 @@ local build(arch, test_ui, dind) = [
     arch: arch,
   },
   steps: [
-           {
-             name: 'version',
-             image: 'debian:buster-slim',
-             commands: [
-               'echo $DRONE_BUILD_NUMBER > version',
-             ],
-           },
            {
              name: 'chromium',
              image: 'mcr.microsoft.com/playwright:v1.49.1',
@@ -48,7 +40,7 @@ local build(arch, test_ui, dind) = [
            },
            {
              name: 'chromium pdf',
-             image: 'debian:bullseye-slim',
+             image: 'debian:bookworm-slim',
              commands: [
                './chromium/test-pdf.sh',
              ],
@@ -57,8 +49,7 @@ local build(arch, test_ui, dind) = [
              name: 'php',
              image: 'php:' + php,
              commands: [
-               './php/build.sh',
-               './php/build-server.sh ' + version,
+               './php/build.sh ' + version,
              ],
              environment: {
                GITHUB_TOKEN: {
@@ -71,7 +62,6 @@ local build(arch, test_ui, dind) = [
              image: 'syncloud/platform-buster-' + arch + ':' + platform,
              commands: [
                './php/test.sh',
-               './php/test-server.sh',
              ],
            },
            {
@@ -127,20 +117,14 @@ local build(arch, test_ui, dind) = [
              name: 'cli',
              image: 'golang:1.20',
              commands: [
-               'cd cli',
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/install ./cmd/install",
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/configure ./cmd/configure",
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh",
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh",
-               "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/bin/cli ./cmd/cli",
+               './cli/build.sh',
              ],
            },
            {
              name: 'package',
-             image: 'debian:buster-slim',
+             image: 'debian:bookworm-slim',
              commands: [
-               'VERSION=$(cat version)',
-               './package.sh ' + name + ' $VERSION ',
+               './package.sh ' + name + ' $DRONE_BUILD_NUMBER',
              ],
            },
          ] + [
@@ -148,89 +132,48 @@ local build(arch, test_ui, dind) = [
              name: 'test ' + distro,
              image: 'python:' + python,
              commands: [
-               'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-               'cd test',
-               './deps.sh',
-               'py.test -x -s test.py --distro=' + distro + ' --domain=' + distro + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro + '.com --app=' + name + ' --arch=' + arch,
+               './ci/test.sh test.py ' + distro + ' ' + name + ' ' + arch,
              ],
            }
            for distro in distros
-         ] + (if test_ui then (
-                [
-                  {
-                    name: 'selenium',
-                    image: 'selenium/standalone-' + browser + ':' + selenium,
-                    detach: true,
-                    environment: {
-                      SE_NODE_SESSION_TIMEOUT: '999999',
-                      START_XVFB: 'true',
-                    },
-                    volumes: [{
-                      name: 'shm',
-                      path: '/dev/shm',
-                    }],
-                    commands: [
-                      'cat /etc/hosts',
-                      'DOMAIN="' + distro_default + '.com"',
-                      'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
-                      'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | sudo tee -a /etc/hosts',
-                      'cat /etc/hosts',
-                      '/opt/bin/entry_point.sh',
-                    ],
-                  },
-
-                  {
-                    name: 'selenium-video',
-                    image: 'selenium/video:ffmpeg-6.1.1-20240621',
-                    detach: true,
-                    environment: {
-                      DISPLAY_CONTAINER_NAME: 'selenium',
-                      FILE_NAME: 'video.mkv',
-                    },
-                    volumes: [
-                      {
-                        name: 'shm',
-                        path: '/dev/shm',
-                      },
-                      {
-                        name: 'videos',
-                        path: '/videos',
-                      },
-                    ],
-                  },
-                  {
-                    name: 'test-ui',
-                    image: 'python:' + python,
-                    commands: [
-                      'cd test',
-                      './deps.sh',
-                      'py.test -x -s ui.py --distro=buster --ui-mode=desktop --domain=' + distro_default + '.com --device-host=' + name + '.' + distro_default + '.com --app=' + name + ' --browser-height=2000 --browser=' + browser,
-                    ],
-                    volumes: [{
-                      name: 'videos',
-                      path: '/videos',
-                    }],
-                  },
-                ]
-              )
-              else []) +
-         (if arch == 'amd64' then [
-            {
-              name: 'test-upgrade',
-              image: 'python:' + python,
-              commands: [
-                'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-                'cd test',
-                './deps.sh',
-                'py.test -x -s upgrade.py --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.buster.com --app=' + name + ' --browser=' + browser,
-              ],
-              privileged: true,
-              volumes: [{
-                name: 'videos',
-                path: '/videos',
-              }],
-            },
-          ] else []) + [
+         ] + (if test_ui then [
+                {
+                  name: 'e2e',
+                  image: playwright,
+                  commands: [
+                    './test/e2e/run.sh specs/01-smoke.spec.ts',
+                  ],
+                },
+                {
+                  name: 'test-upgrade-prev',
+                  image: 'python:' + python,
+                  commands: [
+                    './ci/test.sh upgrade_prev.py ' + distro_default + ' ' + name + ' ' + arch,
+                  ],
+                },
+                {
+                  name: 'e2e-before-upgrade',
+                  image: playwright,
+                  commands: [
+                    './test/e2e/run.sh specs/02-pre-upgrade.spec.ts',
+                  ],
+                },
+                {
+                  name: 'test-upgrade',
+                  image: 'python:' + python,
+                  commands: [
+                    './ci/test.sh upgrade.py ' + distro_default + ' ' + name + ' ' + arch,
+                  ],
+                  privileged: true,
+                },
+                {
+                  name: 'e2e-after-upgrade',
+                  image: playwright,
+                  commands: [
+                    './test/e2e/run.sh specs/03-post-upgrade.spec.ts',
+                  ],
+                },
+              ] else []) + [
     {
       name: 'publish',
       image: 'syncloud/store-publisher:' + store_publisher,
@@ -273,18 +216,6 @@ local build(arch, test_ui, dind) = [
   },
   services: [
     {
-      name: 'docker',
-      image: 'docker:' + dind,
-      privileged: true,
-      volumes: [
-        {
-          name: 'dockersock',
-          path: '/var/run',
-        },
-      ],
-    },
-  ] + [
-    {
       name: name + '.' + distro + '.com',
       image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
       privileged: true,
@@ -314,20 +245,8 @@ local build(arch, test_ui, dind) = [
         path: '/dev',
       },
     },
-    {
-      name: 'shm',
-      temp: {},
-    },
-    {
-      name: 'videos',
-      temp: {},
-    },
-    {
-      name: 'dockersock',
-      temp: {},
-    },
   ],
 }];
 
-build('amd64', true, '20.10.21-dind') +
-build('arm64', false, '20.10.21-dind')
+build('amd64', true) +
+build('arm64', false)

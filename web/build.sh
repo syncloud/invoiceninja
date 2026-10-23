@@ -34,7 +34,7 @@ for i in {1..5}; do
   npm i --ignore-scripts && break || rm -rf node_modules && sleep 15
 done
 
-NODE_OPTIONS="--max-old-space-size=6144" npm run build
+NODE_OPTIONS="--max-old-space-size=3072" npx vite build
 ls -la dist/
 
 

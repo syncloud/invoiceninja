@@ -14,3 +14,5 @@ ${BUILD_DIR}/bin/php-fpm.sh -y $TEST_CONFIG_DIR/php-fpm.conf -c $TEST_CONFIG_DIR
 ${BUILD_DIR}/bin/php.sh -c $TEST_CONFIG_DIR/php.ini --version
 ${BUILD_DIR}/bin/php.sh -c $TEST_CONFIG_DIR/php.ini -i
 ${BUILD_DIR}/bin/php.sh -c $TEST_CONFIG_DIR/php.ini -i | grep -i "gd support" | grep -i enabled
+
+${DIR}/test-server.sh
